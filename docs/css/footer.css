@@ -1,0 +1,50 @@
+/* The footer. Its content is fixed behind the page (z-index 0) and the page scrolls away to uncover it;
+   the footer element's bottom padding provides that scroll distance. */
+
+.new-footer { background: var(--night); padding: 50px 0 0; color: #cdbba3; }
+footer.new-footer { padding-bottom: calc(100dvh - 2.625rem); }
+.footer-container { max-width: 85%; margin: 0 auto; bottom: 0; position: fixed; z-index: 0; width: 100%; right: 0; left: 0; }
+.footer-center-logo { text-align: center; margin-bottom: 1.5rem; }
+.footer-center-logo > a { display: inline-block; }
+.footer-center-logo > a > img { width: 12rem; max-width: 12rem; height: auto; margin: 0 auto; }
+.footer-tagline { margin: -6px 0 36px; text-align: center; font-family: var(--font-playfair); font-style: italic; font-size: 16px; color: #e6d3b3; letter-spacing: .04em; }
+
+.footer-links { display: flex; flex-wrap: wrap; text-align: left; margin-bottom: 30px; gap: 24px 13px; justify-content: space-between; }
+.footer-accordion-header { display: block; padding: 0; cursor: default; pointer-events: none; text-align: left; }
+.footer-links h4 { font-size: 15px; margin: 0 0 20px; color: #f3e6d0; position: relative; text-transform: uppercase; font-weight: 400; letter-spacing: .14em; }
+.footer-accordion-icon { display: none; }
+.footer-accordion-content { display: block; max-height: none; overflow: visible; }
+.footer-links ul { list-style: none; padding: 0; }
+.footer-links li { margin: 13px 0; }
+.footer-links a { color: #a89478; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
+.footer-links a:hover { color: #f3e6d0; }
+.footer-links .footer-products { columns: 2; column-gap: 40px; }
+.footer-links .footer-products li { margin: 0 0 14px; break-inside: avoid; }
+
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; border-top: 1px solid #3b2a2a; padding: 30px 0; margin-top: 60px; min-height: 84px; font-size: 12px; color: #8d7b64; letter-spacing: .06em; }
+
+@media (max-width: 768px) {
+  .new-footer { padding: 40px 40px 0; }
+  footer.new-footer { padding-bottom: calc(90dvh - 2.625rem); }
+  .footer-container { bottom: 30px; }
+  .footer-center-logo img { min-width: 130px; }
+  .footer-center-logo a { display: block; }
+  .footer-center-logo { margin-bottom: 20px; }
+  .footer-tagline { margin-bottom: 24px; }
+  .footer-links { flex-direction: column; gap: 5px; text-align: left; }
+  .footer-links .footer-accordion-item { border-bottom: 1px solid #3b2a2a; padding: 0; }
+  .footer-accordion-header { display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: pointer; pointer-events: auto; padding: 20px 0; user-select: none; }
+  .footer-links .footer-accordion-header h4 { margin: 0; flex: 1; font-size: 14px; }
+  .footer-accordion-icon { display: flex; width: 20px; height: 20px; align-items: center; justify-content: center; transition: transform .6s ease; color: #f3e6d0; }
+  .footer-accordion-icon svg { width: 12px; height: 8px; }
+  .footer-accordion-item.active .footer-accordion-icon { transform: rotate(180deg); }
+  .footer-accordion-content { max-height: 0; overflow: hidden; transition: max-height .6s ease, padding .6s ease; padding: 0; }
+  .footer-accordion-item.active .footer-accordion-content { max-height: 700px; padding-bottom: 20px; }
+  .footer-links li { margin: 0 0 16px; font-size: 14px; }
+  .footer-links .footer-products { columns: 1; }
+  .footer-bottom { flex-direction: column-reverse; align-items: center; justify-content: center; margin-top: 0; border: 0; padding-top: 0; min-height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-accordion-content, .footer-accordion-icon { transition: none; }
+}

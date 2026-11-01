@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AMORE — The Fragrance Collection</title>
+  <meta name="description" content="AMORE, The Fragrance Collection: Ten distinct scent identities. Passion in every drop.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preload" href="fonts/jost/jost-latin-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- logo intro: a dark cover from the first paint, removed by js/polish.js (the timeout is only a safety net) -->
+  <script>try{var q=location.search,s=sessionStorage.getItem('amore-intro-seen')==='1';if(!/[?&]nointro/.test(q)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&(/[?&]intro(=|&|$)/.test(q)||!s)){document.documentElement.classList.add('intro-pending');setTimeout(function(){document.documentElement.classList.remove('intro-pending')},6000)}}catch(e){}</script>
+  <style>html.intro-pending{background:#0d0709}html.intro-pending body::before{content:"";position:fixed;inset:0;z-index:3999;background:#0d0709}</style>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="icon" href="assets/logo/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/chrome.css">
+  <link rel="stylesheet" href="css/brand.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body class="home-page ltr">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ───────────── announcement bar ───────────── -->
+<div class="announcement-bar" id="announcement" role="region" aria-label="Announcements">
+  <div class="announcement-viewport" data-announcement-viewport>
+    <div class="announcement-track" data-announcement-track>
+      <div class="announcement-slide"><span class="announcement-text">Welcome to <strong>AMORE</strong> - Passion in every drop</span></div>
+      <div class="announcement-slide"><span class="announcement-text">The Fragrance Collection - Ten distinct scent identities</span></div>
+    </div>
+  </div>
+  <button class="announcement-close" type="button" hidden aria-label="Close announcement bar" data-announcement-close>&times;</button>
+</div>
+
+<!-- ───────────── header ───────────── -->
+<header class="header home-page" id="main-header">
+  <button class="menu-icon" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu-drawer" data-menu-open>
+    <svg class="header-icon header-icon--menu" aria-hidden="true" focusable="false" fill="none" viewBox="0 0 24 24"><path class="lv-header-icon-burger__line -top" fill="currentColor" d="M22 4.90039L21.0996 5.80078H2.90039L2 4.90039L2.90039 4H21.0996L22 4.90039Z"></path><path class="lv-header-icon-burger__line -middle" fill="currentColor" d="M22 12L21.0996 12.9004H2.90039L2 12L2.90039 11.0996H21.0996L22 12Z"></path><path class="lv-header-icon-burger__line -bottom" fill="currentColor" d="M22 19.1006L21.0996 20.001H2.90039L2 19.1006L2.90039 18.2002H21.0996L22 19.1006Z"></path></svg>
+  </button>
+
+  <a class="header-logo-link active" href="/" aria-label="AMORE — home">
+    <span class="header-logo"><img class="logo-dark" src="assets/logo/amore-wordmark-dark.png" alt="AMORE" width="966" height="125"><img class="logo-light" src="assets/logo/amore-wordmark-light.png" alt="" aria-hidden="true" width="966" height="125"></span>
+  </a>
+
+  <nav class="header-ctas" aria-label="Utilities">
+    <form class="header-search-container" role="search" data-search-form action="/search" method="get">
+      <div class="header-search-wrapper">
+        <input class="header-search-input" name="q" type="search" placeholder="Search" autocomplete="off" aria-label="Search" data-search-input>
+        <button class="header-search-button" type="button" aria-label="Search" data-search-toggle>
+          <svg class="header-icon header-icon--search" aria-hidden="true" focusable="false" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M10 2a8 8 0 0 1 6.125 13.144L22 21.01V22l-.005.005h-.98l-5.881-5.872A8 8 0 1 1 10 2m0 1.4a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2"></path></svg>
+        </button>
+      </div>
+    </form>
+    <button class="header-cart-icon" type="button" aria-label="Open shopping bag" data-cart-open>
+      <svg class="header-icon header-icon--cart" aria-hidden="true" focusable="false" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M12 2c3.28 0 5.944 3.235 5.998 7.25h1.64c.247 0 .459.18.497.422l1.859 11.751a.5.5 0 0 1-.498.577H2.505a.502.502 0 0 1-.5-.577l1.86-11.75a.5.5 0 0 1 .498-.423h1.64C6.056 5.235 8.72 2 12 2M3.67 20.5h16.66l-1.542-9.75h-3.084c-.115.588-.45 1.107-1.002 1.368-.664.315-1.596.632-2.657.632s-2.014-.317-2.7-.631c-.563-.258-.914-.777-1.04-1.369H5.213zM12 3.5c-2.379 0-4.446 2.505-4.498 5.75h.888c.257-.588.844-1 1.527-1h4.167c.683 0 1.269.412 1.526 1h.887C16.445 6.005 14.38 3.5 12 3.5"></path></svg>
+    </button>
+  </nav>
+</header>
+
+<!-- ───────────── menu drawer ───────────── -->
+<div class="menu-overlay" data-menu-overlay></div>
+<nav class="simple-drawer" id="menu-drawer" aria-label="Main menu" aria-hidden="true" data-menu-drawer>
+  <div class="drawer-content">
+    <button class="menu-close-btn" type="button" aria-label="Close menu" data-menu-close>
+      <span class="menu-close-label">Menu</span>
+      <svg class="menu-close-icon" aria-hidden="true" focusable="false" viewBox="0 0 40 40"><path d="M23.868 20.015L39.117 4.78c1.11-1.108 1.11-2.77 0-3.877-1.109-1.108-2.773-1.108-3.882 0L19.986 16.137 4.737.904C3.628-.204 1.965-.204.856.904c-1.11 1.108-1.11 2.77 0 3.877l15.249 15.234L.855 35.248c-1.108 1.108-1.108 2.77 0 3.877.555.554 1.248.831 1.942.831s1.386-.277 1.94-.83l15.25-15.234 15.248 15.233c.555.554 1.248.831 1.941.831s1.387-.277 1.941-.83c1.11-1.109 1.11-2.77 0-3.878L23.868 20.015z"></path></svg>
+    </button>
+
+    <div class="header-menu-mobile">
+      <div class="menu-tiles-wrapper" data-tiles>
+        <button class="menu-tiles-header" type="button" aria-expanded="true" data-tiles-toggle>
+          <h6>Featured</h6>
+          <span class="menu-tiles-chevron" aria-hidden="true"><svg aria-hidden="true" focusable="false" viewBox="0 0 12 8" fill="none"><path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.2"></path></svg></span>
+        </button>
+        <div class="menu-tiles-body" data-tiles-body>
+          <div class="menu-tiles-slider" data-tiles-slider>
+            <div class="menu-tiles-track" data-tiles-track>
+              <a class="menu-tile" href="/products/royal-oud"><img src="assets/01_Royal_Oud.png" alt="" width="50" height="50"><h3>ROYAL OUD</h3></a>
+              <a class="menu-tile" href="/products/bleu-imperial"><img src="assets/02_Bleu_Imperial.png" alt="" width="50" height="50"><h3>BLEU IMPÉRIAL</h3></a>
+              <a class="menu-tile" href="/products/velvet-rose"><img src="assets/03_Velvet_Rose.png" alt="" width="50" height="50"><h3>VELVET ROSE</h3></a>
+            </div>
+          </div>
+          <div class="menu-tiles-nav">
+            <button class="menu-tiles-prev is-disabled" type="button" aria-label="Previous" data-tiles-prev><svg aria-hidden="true" focusable="false" viewBox="0 0 24 16" fill="none"><path d="M8 1L1 8L8 15M2 8H23" stroke="currentColor" stroke-width="1.3"></path></svg></button>
+            <span class="menu-tiles-fraction" data-tiles-fraction>1/3</span>
+            <button class="menu-tiles-next" type="button" aria-label="Next" data-tiles-next><svg aria-hidden="true" focusable="false" viewBox="0 0 24 16" fill="none"><path d="M16 1L23 8L16 15M22 8H1" stroke="currentColor" stroke-width="1.3"></path></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="first-level-menu">
+        <a class="header-menu-item header-menu-item--head" href="/collections/the-fragrance-collection"><span>&#10022; The Fragrance Collection</span><span class="menu-item-subtitle">Ten distinct scent identities</span></a>
+        <p class="menu-collection-tagline"><u>Passion in every drop</u></p>
+        <a class="header-menu-item" href="/products/royal-oud"><span>&#10023; Royal Oud</span><span class="menu-item-subtitle">A Legacy in Scent</span></a>
+        <a class="header-menu-item" href="/products/bleu-imperial"><span>&#10023; Bleu Impérial</span><span class="menu-item-subtitle">Freshness with Power</span></a>
+        <a class="header-menu-item" href="/products/velvet-rose"><span>&#10023; Velvet Rose</span><span class="menu-item-subtitle">Romance Reimagined</span></a>
+        <a class="header-menu-item" href="/products/ember-woods"><span>&#10023; Ember Woods</span><span class="menu-item-subtitle">The Warmth of the Wild</span></a>
+        <a class="header-menu-item" href="/products/citrus-noir"><span>&#10023; Citrus Noir</span><span class="menu-item-subtitle">A Modern Classic</span></a>
+        <a class="header-menu-item" href="/products/spiced-elixir"><span>&#10023; Spiced Elixir</span><span class="menu-item-subtitle">Bold & Sensual</span></a>
+        <a class="header-menu-item" href="/products/arctic-mineral"><span>&#10023; Arctic Mineral</span><span class="menu-item-subtitle">The Chill of Elegance</span></a>
+        <a class="header-menu-item" href="/products/tobacco-oud"><span>&#10023; Tobacco Oud</span><span class="menu-item-subtitle">Deep, Rich, Enduring</span></a>
+        <a class="header-menu-item" href="/products/silver-vetiver"><span>&#10023; Silver Vetiver</span><span class="menu-item-subtitle">Pure Sophistication</span></a>
+        <a class="header-menu-item" href="/products/infinite-noir"><span>&#10023; Infinite Noir</span><span class="menu-item-subtitle">Intensity Without Limits</span></a>
+        <div class="menu-secondary">
+          <a href="/pages/about">About AMORE</a>
+          <a href="/pages/contact">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-three-column">
+      <div class="image-card-container">
+        <a class="image-card" href="/products/royal-oud" aria-label="ROYAL OUD"><img src="assets/01_Royal_Oud.png" alt="AMORE ROYAL OUD poster" loading="lazy"></a>
+        <a class="image-card" href="/products/infinite-noir" aria-label="INFINITE NOIR"><img src="assets/10_Infinite_Noir.png" alt="AMORE INFINITE NOIR poster" loading="lazy"></a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ───────────── search + bag drawers ───────────── -->
+<div class="overlay" id="search-overlay" data-drawer-overlay="search">
+  <button class="close-outside" type="button" aria-label="Close search" data-drawer-close></button>
+  <aside aria-label="Search" aria-hidden="true">
+    <header><h3>SEARCH</h3><button class="close" type="button" aria-label="Close search" data-drawer-close><svg aria-hidden="true" focusable="false" viewBox="0 0 40 40"><path d="M23.868 20.015L39.117 4.78c1.11-1.108 1.11-2.77 0-3.877-1.109-1.108-2.773-1.108-3.882 0L19.986 16.137 4.737.904C3.628-.204 1.965-.204.856.904c-1.11 1.108-1.11 2.77 0 3.877l15.249 15.234L.855 35.248c-1.108 1.108-1.108 2.77 0 3.877.555.554 1.248.831 1.942.831s1.386-.277 1.94-.83l15.25-15.234 15.248 15.233c.555.554 1.248.831 1.941.831s1.387-.277 1.941-.83c1.11-1.109 1.11-2.77 0-3.878L23.868 20.015z"></path></svg></button></header>
+    <main>
+      <div class="predictive-search">
+        <form class="predictive-search-form" action="/search" method="get" role="search">
+          <input type="search" name="q" placeholder="Search" aria-label="Search fragrances" data-search-drawer-input autocomplete="off">
+          <button type="submit">Search</button>
+        </form>
+        <div class="predictive-search-results" data-search-results aria-live="polite"></div>
+      </div>
+    </main>
+  </aside>
+</div>
+
+<div class="overlay" id="cart-overlay" data-drawer-overlay="cart">
+  <button class="close-outside" type="button" aria-label="Close shopping bag" data-drawer-close></button>
+  <aside aria-label="Shopping bag" aria-hidden="true">
+    <header><h3>SHOPPING BAG</h3><button class="close" type="button" aria-label="Close shopping bag" data-drawer-close><svg aria-hidden="true" focusable="false" viewBox="0 0 40 40"><path d="M23.868 20.015L39.117 4.78c1.11-1.108 1.11-2.77 0-3.877-1.109-1.108-2.773-1.108-3.882 0L19.986 16.137 4.737.904C3.628-.204 1.965-.204.856.904c-1.11 1.108-1.11 2.77 0 3.877l15.249 15.234L.855 35.248c-1.108 1.108-1.108 2.77 0 3.877.555.554 1.248.831 1.942.831s1.386-.277 1.94-.83l15.25-15.234 15.248 15.233c.555.554 1.248.831 1.941.831s1.387-.277 1.941-.83c1.11-1.109 1.11-2.77 0-3.878L23.868 20.015z"></path></svg></button></header>
+    <main>
+      <div class="cart-empty">
+        <p>Your bag is currently empty.</p>
+        <button class="cart-continue" type="button" data-drawer-close>Continue shopping</button>
+      </div>
+    </main>
+  </aside>
+</div>
+
+<!-- ───────────── page ───────────── -->
+<main class="home" id="main">
+  <span id="top"></span>
+
+  <!-- hero: scrubbed reveal. The stage shrinks into a rounded window over a text marquee -->
+  <section class="hero-reveal-section" data-hero aria-label="AMORE">
+    <div class="hero-reveal-pin" data-hero-pin>
+      <div class="hero-reveal-marquee" data-hero-marquee aria-hidden="true">
+        <div class="hero-reveal-marquee-row is-top"><div class="hero-reveal-marquee-track">
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+        </div></div>
+        <div class="hero-reveal-marquee-row is-bottom"><div class="hero-reveal-marquee-track">
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+          <span>Passion in every drop. Passion in every drop. Passion in every drop. Passion in every drop.</span>
+        </div></div>
+      </div>
+      <div class="hero-reveal-stage" data-hero-stage>
+        <div class="hero-reveal-bg">
+          <div class="hero-strip">
+            <img src="assets/01_Royal_Oud.png" alt="AMORE ROYAL OUD" width="261" height="587">
+          <img src="assets/02_Bleu_Imperial.png" alt="AMORE BLEU IMPÉRIAL" width="261" height="587">
+          <img src="assets/03_Velvet_Rose.png" alt="AMORE VELVET ROSE" width="256" height="587">
+          <img src="assets/04_Ember_Woods.png" alt="AMORE EMBER WOODS" width="259" height="587">
+          <img src="assets/05_Citrus_Noir.png" alt="AMORE CITRUS NOIR" width="263" height="587">
+          <img src="assets/06_Spiced_Elixir.png" alt="AMORE SPICED ELIXIR" width="261" height="609">
+          <img src="assets/07_Arctic_Mineral.png" alt="AMORE ARCTIC MINERAL" width="261" height="609">
+          <img src="assets/08_Tobacco_Oud.png" alt="AMORE TOBACCO OUD" width="256" height="609">
+          <img src="assets/09_Silver_Vetiver.png" alt="AMORE SILVER VETIVER" width="259" height="609">
+          <img src="assets/10_Infinite_Noir.png" alt="AMORE INFINITE NOIR" width="263" height="609">
+            <img aria-hidden="true" loading="lazy" src="assets/01_Royal_Oud.png" alt="" width="261" height="587">
+          <img aria-hidden="true" loading="lazy" src="assets/02_Bleu_Imperial.png" alt="" width="261" height="587">
+          <img aria-hidden="true" loading="lazy" src="assets/03_Velvet_Rose.png" alt="" width="256" height="587">
+          <img aria-hidden="true" loading="lazy" src="assets/04_Ember_Woods.png" alt="" width="259" height="587">
+          <img aria-hidden="true" loading="lazy" src="assets/05_Citrus_Noir.png" alt="" width="263" height="587">
+          <img aria-hidden="true" loading="lazy" src="assets/06_Spiced_Elixir.png" alt="" width="261" height="609">
+          <img aria-hidden="true" loading="lazy" src="assets/07_Arctic_Mineral.png" alt="" width="261" height="609">
+          <img aria-hidden="true" loading="lazy" src="assets/08_Tobacco_Oud.png" alt="" width="256" height="609">
+          <img aria-hidden="true" loading="lazy" src="assets/09_Silver_Vetiver.png" alt="" width="259" height="609">
+          <img aria-hidden="true" loading="lazy" src="assets/10_Infinite_Noir.png" alt="" width="263" height="609">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- statement: slides over the end of the pinned hero -->
+  <section class="statement" aria-labelledby="statement-title">
+    <div class="statement-inner">
+      <p class="statement-eyebrow">The Fragrance Collection</p>
+      <h2 class="statement-title" id="statement-title" data-split>Passion in every drop</h2>
+      <p class="statement-sub">Ten distinct scent identities</p>
+      <p class="statement-text">A curated collection of fragrance concepts, each with its own character, atmosphere and signature notes.</p>
+      <a class="statement-cta" href="/collections/the-fragrance-collection">Discover the collection</a>
+    </div>
+  </section>
+
+  <!-- the ten bottles: a slow, endless parade of the bottle cut-outs (the second set makes the loop seamless) -->
+  <section class="lineup" data-lineup aria-labelledby="lineup-title">
+    <div class="lineup-head">
+      <p class="lineup-eyebrow">Eau de Parfum</p>
+      <h2 class="lineup-title" id="lineup-title" data-split>Meet the ten</h2>
+    </div>
+    <div class="lineup-viewport">
+      <ul class="lineup-track">
+        <li><a class="lineup-item" href="/products/royal-oud" data-accent="#7b2d9b"><img src="assets/bottles/01_Royal_Oud.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">01</span><span class="lineup-name">ROYAL OUD</span><span class="lineup-slogan">A Legacy in Scent</span></a></li>
+        <li><a class="lineup-item" href="/products/bleu-imperial" data-accent="#1c58a8"><img src="assets/bottles/02_Bleu_Imperial.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">02</span><span class="lineup-name">BLEU IMPÉRIAL</span><span class="lineup-slogan">Freshness with Power</span></a></li>
+        <li><a class="lineup-item" href="/products/velvet-rose" data-accent="#a8283f"><img src="assets/bottles/03_Velvet_Rose.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">03</span><span class="lineup-name">VELVET ROSE</span><span class="lineup-slogan">Romance Reimagined</span></a></li>
+        <li><a class="lineup-item" href="/products/ember-woods" data-accent="#c2641a"><img src="assets/bottles/04_Ember_Woods.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">04</span><span class="lineup-name">EMBER WOODS</span><span class="lineup-slogan">The Warmth of the Wild</span></a></li>
+        <li><a class="lineup-item" href="/products/citrus-noir" data-accent="#a58a1c"><img src="assets/bottles/05_Citrus_Noir.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">05</span><span class="lineup-name">CITRUS NOIR</span><span class="lineup-slogan">A Modern Classic</span></a></li>
+        <li><a class="lineup-item" href="/products/spiced-elixir" data-accent="#a8541c"><img src="assets/bottles/06_Spiced_Elixir.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">06</span><span class="lineup-name">SPICED ELIXIR</span><span class="lineup-slogan">Bold &amp; Sensual</span></a></li>
+        <li><a class="lineup-item" href="/products/arctic-mineral" data-accent="#6a8cab"><img src="assets/bottles/07_Arctic_Mineral.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">07</span><span class="lineup-name">ARCTIC MINERAL</span><span class="lineup-slogan">The Chill of Elegance</span></a></li>
+        <li><a class="lineup-item" href="/products/tobacco-oud" data-accent="#8f5932"><img src="assets/bottles/08_Tobacco_Oud.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">08</span><span class="lineup-name">TOBACCO OUD</span><span class="lineup-slogan">Deep, Rich, Enduring</span></a></li>
+        <li><a class="lineup-item" href="/products/silver-vetiver" data-accent="#8a8d91"><img src="assets/bottles/09_Silver_Vetiver.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">09</span><span class="lineup-name">SILVER VETIVER</span><span class="lineup-slogan">Pure Sophistication</span></a></li>
+        <li><a class="lineup-item" href="/products/infinite-noir" data-accent="#a37853"><img src="assets/bottles/10_Infinite_Noir.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">10</span><span class="lineup-name">INFINITE NOIR</span><span class="lineup-slogan">Intensity Without Limits</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/royal-oud" data-accent="#7b2d9b" tabindex="-1"><img src="assets/bottles/01_Royal_Oud.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">01</span><span class="lineup-name">ROYAL OUD</span><span class="lineup-slogan">A Legacy in Scent</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/bleu-imperial" data-accent="#1c58a8" tabindex="-1"><img src="assets/bottles/02_Bleu_Imperial.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">02</span><span class="lineup-name">BLEU IMPÉRIAL</span><span class="lineup-slogan">Freshness with Power</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/velvet-rose" data-accent="#a8283f" tabindex="-1"><img src="assets/bottles/03_Velvet_Rose.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">03</span><span class="lineup-name">VELVET ROSE</span><span class="lineup-slogan">Romance Reimagined</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/ember-woods" data-accent="#c2641a" tabindex="-1"><img src="assets/bottles/04_Ember_Woods.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">04</span><span class="lineup-name">EMBER WOODS</span><span class="lineup-slogan">The Warmth of the Wild</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/citrus-noir" data-accent="#a58a1c" tabindex="-1"><img src="assets/bottles/05_Citrus_Noir.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">05</span><span class="lineup-name">CITRUS NOIR</span><span class="lineup-slogan">A Modern Classic</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/spiced-elixir" data-accent="#a8541c" tabindex="-1"><img src="assets/bottles/06_Spiced_Elixir.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">06</span><span class="lineup-name">SPICED ELIXIR</span><span class="lineup-slogan">Bold &amp; Sensual</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/arctic-mineral" data-accent="#6a8cab" tabindex="-1"><img src="assets/bottles/07_Arctic_Mineral.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">07</span><span class="lineup-name">ARCTIC MINERAL</span><span class="lineup-slogan">The Chill of Elegance</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/tobacco-oud" data-accent="#8f5932" tabindex="-1"><img src="assets/bottles/08_Tobacco_Oud.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">08</span><span class="lineup-name">TOBACCO OUD</span><span class="lineup-slogan">Deep, Rich, Enduring</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/silver-vetiver" data-accent="#8a8d91" tabindex="-1"><img src="assets/bottles/09_Silver_Vetiver.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">09</span><span class="lineup-name">SILVER VETIVER</span><span class="lineup-slogan">Pure Sophistication</span></a></li>
+        <li aria-hidden="true"><a class="lineup-item" href="/products/infinite-noir" data-accent="#a37853" tabindex="-1"><img src="assets/bottles/10_Infinite_Noir.webp" alt="" width="600" height="1103" loading="lazy"><span class="lineup-number">10</span><span class="lineup-name">INFINITE NOIR</span><span class="lineup-slogan">Intensity Without Limits</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- moving headline: slides sideways as the page scrolls -->
+  <div class="band band--dark" data-band="left" aria-hidden="true">
+    <div class="band-track">
+      <div class="band-set"><span>Passion in every drop</span><i>&#10022;</i><span>Passion in every drop</span><i>&#10022;</i></div>
+      <div class="band-set"><span>Passion in every drop</span><i>&#10022;</i><span>Passion in every drop</span><i>&#10022;</i></div>
+      <div class="band-set"><span>Passion in every drop</span><i>&#10022;</i><span>Passion in every drop</span><i>&#10022;</i></div>
+    </div>
+  </div>
+
+  <!-- the ten fragrances -->
+  <section class="collection" aria-labelledby="collection-title">
+    <h2 class="collection-title" id="collection-title" data-split>The Fragrance Collection</h2>
+    <p class="collection-sub">Ten distinct scent identities</p>
+    <div class="collection-grid" data-reveal-grid>
+      <a class="collection-card" href="/products/royal-oud">
+        <div class="collection-card-image"><img src="assets/01_Royal_Oud.png" alt="AMORE ROYAL OUD Eau de Parfum poster" width="261" height="587" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">01</span><h3>ROYAL OUD</h3><p>A Legacy in Scent</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/bleu-imperial">
+        <div class="collection-card-image"><img src="assets/02_Bleu_Imperial.png" alt="AMORE BLEU IMPÉRIAL Eau de Parfum poster" width="261" height="587" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">02</span><h3>BLEU IMPÉRIAL</h3><p>Freshness with Power</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/velvet-rose">
+        <div class="collection-card-image"><img src="assets/03_Velvet_Rose.png" alt="AMORE VELVET ROSE Eau de Parfum poster" width="256" height="587" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">03</span><h3>VELVET ROSE</h3><p>Romance Reimagined</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/ember-woods">
+        <div class="collection-card-image"><img src="assets/04_Ember_Woods.png" alt="AMORE EMBER WOODS Eau de Parfum poster" width="259" height="587" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">04</span><h3>EMBER WOODS</h3><p>The Warmth of the Wild</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/citrus-noir">
+        <div class="collection-card-image"><img src="assets/05_Citrus_Noir.png" alt="AMORE CITRUS NOIR Eau de Parfum poster" width="263" height="587" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">05</span><h3>CITRUS NOIR</h3><p>A Modern Classic</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/spiced-elixir">
+        <div class="collection-card-image"><img src="assets/06_Spiced_Elixir.png" alt="AMORE SPICED ELIXIR Eau de Parfum poster" width="261" height="609" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">06</span><h3>SPICED ELIXIR</h3><p>Bold & Sensual</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/arctic-mineral">
+        <div class="collection-card-image"><img src="assets/07_Arctic_Mineral.png" alt="AMORE ARCTIC MINERAL Eau de Parfum poster" width="261" height="609" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">07</span><h3>ARCTIC MINERAL</h3><p>The Chill of Elegance</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/tobacco-oud">
+        <div class="collection-card-image"><img src="assets/08_Tobacco_Oud.png" alt="AMORE TOBACCO OUD Eau de Parfum poster" width="256" height="609" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">08</span><h3>TOBACCO OUD</h3><p>Deep, Rich, Enduring</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/silver-vetiver">
+        <div class="collection-card-image"><img src="assets/09_Silver_Vetiver.png" alt="AMORE SILVER VETIVER Eau de Parfum poster" width="259" height="609" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">09</span><h3>SILVER VETIVER</h3><p>Pure Sophistication</p><span class="collection-card-price">₹999</span></div>
+      </a>
+      <a class="collection-card" href="/products/infinite-noir">
+        <div class="collection-card-image"><img src="assets/10_Infinite_Noir.png" alt="AMORE INFINITE NOIR Eau de Parfum poster" width="263" height="609" loading="lazy"></div>
+        <div class="collection-card-label"><span class="collection-card-number">10</span><h3>INFINITE NOIR</h3><p>Intensity Without Limits</p><span class="collection-card-price">₹999</span></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- side posters slide in: the first and the last of the collection -->
+  <section class="chase-arrival-section" data-chase>
+    <div class="chase-arrival-inner">
+      <div class="chase-arrival-image is-left"><div class="chase-arrival-image-reveal" data-chase-image><img src="assets/01_Royal_Oud.png" alt="AMORE ROYAL OUD poster" width="261" height="587" loading="lazy"></div></div>
+      <div class="chase-arrival-contents">
+        <div class="chase-arrival-content is-left" data-chase-content>
+          <h2 class="chase-arrival-heading"><span class="chase-arrival-eyebrow">AMORE 01</span><span class="chase-arrival-title">ROYAL OUD</span></h2>
+          <p class="chase-arrival-tagline">Oud • Saffron • Leather</p>
+          <a class="chase-arrival-cta" href="/products/royal-oud" aria-label="Discover ROYAL OUD"><svg class="chase-arrival-arrow" width="17" height="14" aria-hidden="true" focusable="false" width="17" height="14" viewBox="0 0 17 14" fill="none"><path d="M5 13L1 9L5 5M1 9H12C13.0609 9 14.0783 8.57857 14.8284 7.82843C15.5786 7.07828 16 6.06087 16 5C16 3.93913 15.5786 2.92172 14.8284 2.17157C14.0783 1.42143 13.0609 1 12 1H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        </div>
+        <div class="chase-arrival-content is-right" data-chase-content>
+          <h2 class="chase-arrival-heading"><span class="chase-arrival-eyebrow">AMORE 10</span><span class="chase-arrival-title">INFINITE NOIR</span></h2>
+          <p class="chase-arrival-tagline">Black Pepper • Patchouli • Amber</p>
+          <a class="chase-arrival-cta" href="/products/infinite-noir" aria-label="Discover INFINITE NOIR"><svg class="chase-arrival-arrow" width="17" height="14" aria-hidden="true" focusable="false" width="17" height="14" viewBox="0 0 17 14" fill="none"><path d="M12 13L16 9L12 5M16 9H5C3.93913 9 2.92172 8.57857 2.17157 7.82843C1.42143 7.07828 1 6.06087 1 5C1 3.93913 1.42143 2.92172 2.17157 2.17157C2.92172 1.42143 3.93913 1 5 1H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></a>
+        </div>
+      </div>
+      <div class="chase-arrival-image is-right"><div class="chase-arrival-image-reveal" data-chase-image><img src="assets/10_Infinite_Noir.png" alt="AMORE INFINITE NOIR poster" width="263" height="609" loading="lazy"></div></div>
+    </div>
+  </section>
+
+  <!-- fan of ten posters -->
+  <section class="fan-section" data-fan-section>
+    <div class="fan-inner">
+      <h2 class="fan-title" data-split>THE FULL COLLECTION</h2>
+      <div class="fan-grid" data-fan>
+        <a class="fan-tile" href="/products/royal-oud" aria-label="ROYAL OUD"><img class="fan-tile-image" src="assets/01_Royal_Oud.png" alt="" width="261" height="587" loading="lazy"></a>
+        <a class="fan-tile" href="/products/bleu-imperial" aria-label="BLEU IMPÉRIAL"><img class="fan-tile-image" src="assets/02_Bleu_Imperial.png" alt="" width="261" height="587" loading="lazy"></a>
+        <a class="fan-tile" href="/products/velvet-rose" aria-label="VELVET ROSE"><img class="fan-tile-image" src="assets/03_Velvet_Rose.png" alt="" width="256" height="587" loading="lazy"></a>
+        <a class="fan-tile" href="/products/ember-woods" aria-label="EMBER WOODS"><img class="fan-tile-image" src="assets/04_Ember_Woods.png" alt="" width="259" height="587" loading="lazy"></a>
+        <a class="fan-tile" href="/products/citrus-noir" aria-label="CITRUS NOIR"><img class="fan-tile-image" src="assets/05_Citrus_Noir.png" alt="" width="263" height="587" loading="lazy"></a>
+        <a class="fan-tile" href="/products/spiced-elixir" aria-label="SPICED ELIXIR"><img class="fan-tile-image" src="assets/06_Spiced_Elixir.png" alt="" width="261" height="609" loading="lazy"></a>
+        <a class="fan-tile" href="/products/arctic-mineral" aria-label="ARCTIC MINERAL"><img class="fan-tile-image" src="assets/07_Arctic_Mineral.png" alt="" width="261" height="609" loading="lazy"></a>
+        <a class="fan-tile" href="/products/tobacco-oud" aria-label="TOBACCO OUD"><img class="fan-tile-image" src="assets/08_Tobacco_Oud.png" alt="" width="256" height="609" loading="lazy"></a>
+        <a class="fan-tile" href="/products/silver-vetiver" aria-label="SILVER VETIVER"><img class="fan-tile-image" src="assets/09_Silver_Vetiver.png" alt="" width="259" height="609" loading="lazy"></a>
+        <a class="fan-tile" href="/products/infinite-noir" aria-label="INFINITE NOIR"><img class="fan-tile-image" src="assets/10_Infinite_Noir.png" alt="" width="263" height="609" loading="lazy"></a>
+      </div>
+      <p class="fan-intro">Passion in every drop</p>
+      <a class="fan-link" href="/collections/the-fragrance-collection">View all ten</a>
+    </div>
+  </section>
+</main>
+
+<!-- ───────────── footer: sits fixed behind the page and is uncovered at the end ───────────── -->
+<footer class="new-footer">
+  <div class="footer-container">
+    <div class="footer-center-logo"><a href="/"><img src="assets/logo/amore-lockup-light.png" alt="AMORE Fine Fragrances" width="966" height="537" loading="lazy"></a></div>
+    <p class="footer-tagline">Passion in every drop</p>
+    <div class="footer-links" data-footer-accordion>
+      <div class="footer-accordion-item">
+        <button class="footer-accordion-header" type="button" aria-expanded="false" aria-controls="foot-collection"><h4>The Fragrance Collection</h4><span class="footer-accordion-icon" aria-hidden="true"><svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
+        <div class="footer-accordion-content" id="foot-collection"><ul class="footer-products"><li><a href="/products/royal-oud">ROYAL OUD</a></li><li><a href="/products/bleu-imperial">BLEU IMPÉRIAL</a></li><li><a href="/products/velvet-rose">VELVET ROSE</a></li><li><a href="/products/ember-woods">EMBER WOODS</a></li><li><a href="/products/citrus-noir">CITRUS NOIR</a></li><li><a href="/products/spiced-elixir">SPICED ELIXIR</a></li><li><a href="/products/arctic-mineral">ARCTIC MINERAL</a></li><li><a href="/products/tobacco-oud">TOBACCO OUD</a></li><li><a href="/products/silver-vetiver">SILVER VETIVER</a></li><li><a href="/products/infinite-noir">INFINITE NOIR</a></li></ul></div>
+      </div>
+      <div class="footer-accordion-item">
+        <button class="footer-accordion-header" type="button" aria-expanded="false" aria-controls="foot-house"><h4>THE HOUSE</h4><span class="footer-accordion-icon" aria-hidden="true"><svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
+        <div class="footer-accordion-content" id="foot-house"><ul><li><a href="/pages/about">ABOUT AMORE</a></li><li><a href="/pages/contact">CONTACT</a></li></ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 AMORE</p></div>
+  </div>
+</footer>
+</body>
+</html>

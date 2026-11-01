@@ -1,0 +1,57 @@
+/* AMORE brand layer: colours and small adjustments over the generic chrome (chrome.css) */
+
+/* announcement bar */
+.announcement-bar { background: var(--wine); color: #f0dfc2; }
+.announcement-slide strong { font-weight: 500; letter-spacing: .14em; color: #f7e8c9; }
+
+/* header: white over the dark hero, ink on paper everywhere else */
+.header { color: var(--ink); }
+.header.header-scroll-up, .header.search-open { background: var(--paper); }
+body.home-page .header:not(.header-scroll-up):not(.search-open) { color: #fff; }
+.header-search-input { color: var(--ink); }
+/* two versions of the logo: bronze on the paper bar, champagne over the dark hero (same moment the header text turns white) */
+.header-logo .logo-light { display: none; }
+body.home-page .header:not(.header-scroll-up):not(.search-open) .header-logo .logo-dark { display: none; }
+body.home-page .header:not(.header-scroll-up):not(.search-open) .header-logo .logo-light { display: block; }
+.header-search-container:hover .header-search-wrapper,
+.header-search-container.is-open .header-search-wrapper { border-bottom-color: var(--gold-deep); }
+.cart-count { background: var(--wine); color: #fff; }
+
+/* menu and drawers */
+.simple-drawer { background: var(--paper); }
+.menu-tiles-wrapper { background: #f2eadf; }
+.menu-tile { background: var(--paper); }
+.menu-tile img { background: var(--night); }
+.menu-item-subtitle { color: var(--muted); }
+.menu-collection-tagline { color: var(--gold-deep); }
+.overlay aside > header { background: #f4ede2; }
+.overlay aside > main { background: var(--paper); }
+
+/* the posters are tall: keep the bottle in frame in the small thumbnails */
+.menu-tile img, .predictive-item img, .cart-line-image img, .shop-checkout-lines img { object-fit: cover; object-position: 50% 42%; background: var(--night); }
+/* the two big menu posters are shown whole (contain), on the dark brand colour */
+.image-card { background: var(--night); }
+
+/* buttons: wine instead of black */
+.cart-continue { background: var(--wine); }
+.cart-continue:hover { background: var(--paper); color: var(--wine); box-shadow: inset 0 0 0 1px var(--wine); }
+.cart-checkout { background: var(--wine); }
+.cart-checkout:hover { background: var(--paper); color: var(--wine); box-shadow: inset 0 0 0 1px var(--wine); }
+.cart-footer { background: var(--paper); }
+.cart-footer .cart-continue { background: var(--paper); color: var(--wine); box-shadow: inset 0 0 0 1px #cdbba3; }
+.cart-footer .cart-continue:hover { box-shadow: inset 0 0 0 1px var(--wine); }
+.predictive-item.is-top { background: #f4ede2; }
+.predictive-item:hover, .predictive-item:focus-visible { background: #efe5d6; }
+.predictive-search-form { background: var(--paper); border-bottom-color: var(--wine); }
+.qty { border-color: #cdbba3; }
+
+/* a thin gold ring follows the mouse (fine pointers only: script adds it) */
+.cursor-ring {
+  position: fixed; left: 0; top: 0; z-index: 5000; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 1px solid var(--gold); border-radius: 50%; background: transparent; pointer-events: none; opacity: 0; will-change: transform;
+  transition: opacity .3s ease, width .3s ease, height .3s ease, margin .3s ease, background-color .3s ease;
+}
+.cursor-ring.is-on { opacity: .85; }
+.cursor-ring.is-link { width: 58px; height: 58px; margin: -29px 0 0 -29px; background: rgba(176, 138, 74, .14); }
+
+@media (prefers-reduced-motion: reduce) { .cursor-ring { display: none; } }

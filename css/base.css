@@ -1,0 +1,66 @@
+/* base: tokens, reset, type. Jost for interface text, Playfair Display for headings and the wordmark-style accents. */
+:root {
+  --font-jost: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-playfair: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  /* AMORE palette: the gold and the deep wine of the brand document, on warm paper */
+  --gold: #b08a4a;
+  --gold-deep: #8a6a33;
+  --wine: #3d0f17;
+  --ink: #1d1416;
+  --muted: #6f6258;
+  --paper: #faf6f0;
+  --line: #e6d9cb;
+  --night: #0d0709;
+
+  --announcement-height: 30px;
+  --header-height: 50px;
+  --aside-width: 450px;
+  --hero-run: 1.4; /* hero scroll distance, in viewport heights (1.0 on phones) */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html.no-scroll { overflow: hidden; }
+
+body {
+  margin: 0;
+  font-family: var(--font-jost);
+  font-size: 16px;
+  line-height: normal;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, p, figure { margin: 0; }
+h1, h2, h3, h4, h5, h6 { font-weight: 400; }
+ul { margin: 0; padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+img, video, picture { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+input, select { font: inherit; color: inherit; }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: fixed; left: 12px; top: -64px; z-index: 2000; padding: 10px 16px;
+  background: #000; color: #fff; font-size: 14px; transition: top .2s;
+}
+.skip-link:focus { top: 12px; }
+
+:focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 3px; }
+
+.home { position: relative; background: var(--paper); }
+.home > .hero-reveal-section ~ * { position: relative; z-index: 2; }
+
+/* the page covers the footer, which is fixed behind it and uncovered at the very end */
+main { position: relative; z-index: 2; background: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
