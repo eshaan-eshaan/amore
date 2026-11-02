@@ -6,11 +6,12 @@
 // and a project site lives in a sub-folder (https://<user>.github.io/<repo>/). So this script
 //   1. copies assets/, css/, js/ and fonts/,
 //   2. prefixes every address in the two HTML pages with the sub-folder and adds <meta name="amore-base"> (js/base.js reads it),
-//   3. writes one real page per route (products/<handle>/index.html and so on) from shop.html, plus 404.html.
+//   3. writes one real page per route (products/<handle>/index.html and so on) from shop.html, plus 404.html,
+//   4. adds modulepreload links so the scripts load in parallel (the dev server never needs them; a real network does).
 // The sources are not changed: the dev server keeps working at the root.
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve, sep } from 'node:path';
+import { dirname, join, posix, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -21,6 +22,25 @@ export function rebase(html, base) {
   const withMeta = html.replace(/(<meta charset[^>]*>)/i, `$1\n  <meta name="amore-base" content="${base}">`);
   return withMeta.replace(/(\s(?:href|src|action)=")([^"]*)"/g, (match, attribute, value) => `${attribute}${prefix(value)}"`);
 }
+
+/** The scripts `entry` imports, and theirs, by static import (dynamic imports stay lazy). */
+export function moduleGraph(entry) {
+  const seen = new Set();
+  const stack = [entry];
+  while (stack.length) {
+    const file = stack.pop();
+    if (seen.has(file)) continue;
+    seen.add(file);
+    for (const [, spec] of readFileSync(join(ROOT, file), 'utf8').matchAll(/(?:from\s+|import\s+)['"](\.{1,2}\/[^'"]+)['"]/g)) {
+      const next = posix.normalize(posix.join(posix.dirname(file), spec));
+      if (next.endsWith('.js')) stack.push(next);
+    }
+  }
+  return [...seen];
+}
+
+/** modulepreload links: the browser fetches every script at once instead of finding them one import at a time (slow over a real network). */
+const preload = (entry, base) => moduleGraph(entry).map((f) => `  <link rel="modulepreload" href="${base}${f}">`).join('\n');
 
 export async function buildPages(out = join(ROOT, 'docs'), base = '/amore/') {
   if (!base.startsWith('/') || !base.endsWith('/')) throw new Error('base must look like /amore/');
@@ -35,8 +55,10 @@ export async function buildPages(out = join(ROOT, 'docs'), base = '/amore/') {
   for (const dir of ['assets', 'css', 'js', 'fonts']) cpSync(join(ROOT, dir), join(target, dir), { recursive: true });
 
   const { PRODUCTS, COLLECTIONS, PAGES } = await import(pathToFileURL(join(ROOT, 'js', 'data', 'catalogue.js')).href);
-  const home = rebase(readFileSync(join(ROOT, 'index.html'), 'utf8'), base);
-  const shop = rebase(readFileSync(join(ROOT, 'shop.html'), 'utf8'), base);
+  const inHead = (html, links) => html.replace('</head>', `${links}
+</head>`);
+  const home = inHead(rebase(readFileSync(join(ROOT, 'index.html'), 'utf8'), base), preload('js/main.js', base));
+  const shop = inHead(rebase(readFileSync(join(ROOT, 'shop.html'), 'utf8'), base), preload('js/shop-main.js', base));
 
   const routes = [
     ...PRODUCTS.map((p) => `products/${p.handle}`),

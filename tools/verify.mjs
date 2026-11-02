@@ -393,6 +393,7 @@ async function intro() {
   const c = await open({ w: 1440, h: 900 });
   await c.visit('/', 700);
   check('first visit: the logo intro plays over a dark screen, the page is locked underneath and the head holds the dark cover', await c.ev(`(async () => { const i = document.querySelector('.intro'); const src = await (await fetch('/')).text(); return !!i && i.querySelector('img').getAttribute('src').endsWith('amore-monogram-light.png') && document.documentElement.classList.contains('no-scroll') && getComputedStyle(i).position === 'fixed' && !document.documentElement.classList.contains('intro-pending') && src.includes('intro-pending'); })()`));
+  check('the intro’s picture is preloaded because the intro is about to play', await c.ev(`!!document.head.querySelector('link[rel="preload"][as="image"][href$="amore-monogram-light.png"]')`));
   await sleep(3600);
   check('...it removes itself after about three seconds, frees the page and remembers it was shown', await c.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('no-scroll') && sessionStorage.getItem('amore-intro-seen') === '1'`));
   await c.visit('/', 1200);
@@ -406,6 +407,7 @@ async function intro() {
   const d = await open({ w: 1440, h: 900 });
   await d.goto(1500);
   check('/?nointro never plays it (this is how the tests open the site)', await d.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('intro-pending') && !document.documentElement.classList.contains('no-scroll')`));
+  check('...and then nothing is preloaded for it, so the browser has no unused preload to warn about', await d.ev(`!document.head.querySelector('link[rel="preload"][as="image"]')`) && d.problems.length === 0, d.problems.slice(0, 3).join(' | '));
   d.close();
 }
 
@@ -652,6 +654,14 @@ async function pagesBuild() {
     c.problems.splice(0, c.problems.length, ...c.problems.filter((p) => !/not-a-fragrance/.test(p) && !/404/.test(p)));
     check('no console errors or failed requests across the whole Pages run', c.problems.length === 0, c.problems.slice(0, 4).join(' | '));
     c.close();
+
+    // a first visit in a fresh browser: the intro plays from the sub-folder, its picture is preloaded, and nothing is logged
+    const d = await open({ w: 1440, h: 900 });
+    await go(d, '/amore/', 1800);
+    check('Pages first visit: the intro plays with its picture from /amore/, preloaded, and the base is known before the script that needs it', await d.ev(`(() => { const i = document.querySelector('.intro'); const img = i && i.querySelector('img'); const link = document.head.querySelector('link[rel="preload"][as="image"]'); const meta = document.querySelector('meta[name="amore-base"]'); const script = document.head.querySelector('script:not([src])'); return !!img && img.getAttribute('src') === '/amore/assets/logo/amore-monogram-light.png' && img.naturalWidth > 0 && !!link && link.getAttribute('href') === '/amore/assets/logo/amore-monogram-light.png' && !!meta && !!script && !!(meta.compareDocumentPosition(script) & Node.DOCUMENT_POSITION_FOLLOWING); })()`));
+    await sleep(3200);
+    check('Pages first visit: then the page appears, and nothing was logged (no unused-preload warning, no failed request)', await d.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('no-scroll') && !!document.querySelector('.hero-strip img')`) && d.problems.length === 0, d.problems.slice(0, 3).join(' | '));
+    d.close();
   } finally {
     server.close();
     rmSync(out, { recursive: true, force: true });

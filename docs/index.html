@@ -8,8 +8,9 @@
   <meta name="description" content="AMORE, The Fragrance Collection: Ten distinct scent identities. Passion in every drop.">
   <meta name="robots" content="noindex, nofollow">
   <link rel="preload" href="/amore/fonts/jost/jost-latin-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- logo intro: a dark cover from the first paint, removed by js/polish.js (the timeout is only a safety net) -->
-  <script>try{var q=location.search,s=sessionStorage.getItem('amore-intro-seen')==='1';if(!/[?&]nointro/.test(q)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&(/[?&]intro(=|&|$)/.test(q)||!s)){document.documentElement.classList.add('intro-pending');setTimeout(function(){document.documentElement.classList.remove('intro-pending')},6000)}}catch(e){}</script>
+  <!-- logo intro: a dark cover from the first paint, removed by js/polish.js (the timeout is only a safety net).
+       Only when the intro is going to play does this also start fetching its picture, so the picture is ready when the script runs. -->
+  <script>try{var q=location.search,s=sessionStorage.getItem('amore-intro-seen')==='1';if(!/[?&]nointro/.test(q)&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&(/[?&]intro(=|&|$)/.test(q)||!s)){var d=document.documentElement,m=document.querySelector('meta[name="amore-base"]'),l=document.createElement('link');d.classList.add('intro-pending');l.rel='preload';l.as='image';l.href=(m?m.getAttribute('content'):'/')+'assets/logo/amore-monogram-light.png';document.head.appendChild(l);setTimeout(function(){d.classList.remove('intro-pending')},6000)}}catch(e){}</script>
   <style>html.intro-pending{background:#0d0709}html.intro-pending body::before{content:"";position:fixed;inset:0;z-index:3999;background:#0d0709}</style>
   <link rel="stylesheet" href="/amore/css/fonts.css">
   <link rel="icon" href="/amore/assets/logo/favicon.png" type="image/png">
@@ -19,6 +20,19 @@
   <link rel="stylesheet" href="/amore/css/home.css">
   <link rel="stylesheet" href="/amore/css/footer.css">
   <script type="module" src="/amore/js/main.js"></script>
+  <link rel="modulepreload" href="/amore/js/main.js">
+  <link rel="modulepreload" href="/amore/js/polish.js">
+  <link rel="modulepreload" href="/amore/js/base.js">
+  <link rel="modulepreload" href="/amore/js/util.js">
+  <link rel="modulepreload" href="/amore/js/lineup.js">
+  <link rel="modulepreload" href="/amore/js/sections.js">
+  <link rel="modulepreload" href="/amore/js/fan-pose.js">
+  <link rel="modulepreload" href="/amore/js/motion.js">
+  <link rel="modulepreload" href="/amore/js/cart-ui.js">
+  <link rel="modulepreload" href="/amore/js/catalogue-loader.js">
+  <link rel="modulepreload" href="/amore/js/icons.js">
+  <link rel="modulepreload" href="/amore/js/cart.js">
+  <link rel="modulepreload" href="/amore/js/chrome.js">
 </head>
 <body class="home-page ltr">
 <a class="skip-link" href="#main">Skip to content</a>
