@@ -3,6 +3,7 @@ import { initAnnouncement, initHeader, initDrawers, initMenuTiles } from './chro
 import { initCart } from './cart-ui.js';
 import { initFooter } from './sections.js';
 import { initCursor } from './polish.js';
+import { initSpotlight } from './spotlight.js';
 import { renderShop } from './shop.js';
 
 document.documentElement.classList.add('js-ready');
@@ -15,3 +16,4 @@ initMenuTiles();
 initFooter();
 renderShop();
 initCursor();
+initSpotlight();

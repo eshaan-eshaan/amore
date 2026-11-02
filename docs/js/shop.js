@@ -24,7 +24,8 @@ function setMeta(title, description) {
 
 /* ── shared pieces ── */
 function card(p) {
-  return `<li><a class="shop-card" href="${p.url}">
+  const glow = /^#[0-9a-f]{6}$/i.test(p.accent || '') ? ` style="--accent: ${p.accent}"` : '';
+  return `<li><a class="shop-card" href="${p.url}" data-spot${glow}>
     <span class="shop-card-media"><img src="${p.thumb.src}" alt="${esc(p.thumb.alt)}" width="${p.thumb.width}" height="${p.thumb.height}" loading="lazy"></span>
     <span class="shop-card-body">
       <span class="shop-card-name">${esc(p.name)}</span>

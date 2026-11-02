@@ -328,6 +328,12 @@ async function desktop() {
   await c.scroll(sg - 200, 1800);
   check('the collection grid shows ten cards in five columns, each linking to its fragrance with the \u20b9999 price', await c.ev(`(() => { const g = document.querySelector('[data-reveal-grid]'); const cards = [...g.querySelectorAll('.collection-card')]; return getComputedStyle(g).gridTemplateColumns.split(' ').length === 5 && cards.length === 10 && cards.every((a) => /^\\/products\\//.test(a.getAttribute('href')) && /₹999/.test(a.innerText) && a.querySelector('img').naturalWidth > 0); })()`));
   check('cards fade in once they arrive', await c.ev(`[...document.querySelectorAll('.collection-card')].slice(0, 5).every((a) => a.classList.contains('is-in') && getComputedStyle(a).opacity === '1')`));
+  check('each poster card carries its fragrance’s own colour and opts into the spotlight glow', await c.ev(`(async () => { const { PRODUCTS } = await import('/js/data/catalogue.js'); const cards = [...document.querySelectorAll('.collection-card')]; return cards.length === 10 && cards.every((a, i) => a.hasAttribute('data-spot') && a.style.getPropertyValue('--accent').trim() === PRODUCTS[i].accent); })()`));
+  const glowAt = await c.ev(`(() => { const r = document.querySelectorAll('.collection-card-image')[1].getBoundingClientRect(); return [Math.round(r.left + r.width * 0.3), Math.round(r.top + r.height * 0.6)]; })()`);
+  await c.move(...glowAt); await sleep(700);
+  check('hovering a poster card lights it: the light follows the pointer, is drawn in that colour, and an aura shows round the card', await c.ev(`(() => { const card = document.querySelectorAll('.collection-card')[1]; const box = card.querySelector('.collection-card-image'); const r = box.getBoundingClientRect(); const mx = parseFloat(card.style.getPropertyValue('--mx')); const my = parseFloat(card.style.getPropertyValue('--my')); const glow = getComputedStyle(box, '::before'); return card.classList.contains('is-lit') && Math.abs(mx - r.width * 0.3) < 4 && Math.abs(my - r.height * 0.6) < 4 && glow.opacity === '1' && glow.mixBlendMode === 'screen' && glow.backgroundImage.includes('radial-gradient') && getComputedStyle(box).boxShadow.split('rgb').length > 3 && document.querySelectorAll('.is-lit').length === 1; })()`));
+  await c.move(8, 8); await sleep(700);
+  check('...and the light fades out when the pointer leaves', await c.ev(`!document.querySelector('.is-lit') && getComputedStyle(document.querySelector('.collection-card-image'), '::before').opacity === '0'`));
   const ch = await c.ev(`document.querySelector('[data-chase]').getBoundingClientRect().top + scrollY`);
   await c.scroll(ch - 800);
   const tx = await c.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.chase-arrival-image.is-left [data-chase-image]')).transform).e`);
@@ -512,6 +518,10 @@ async function reduced() {
   const sg = await c.ev(`document.querySelector('[data-reveal-grid]').getBoundingClientRect().top + scrollY`);
   await c.scroll(sg - 300, 900);
   check('collection cards are simply there (no fade)', await c.ev(`getComputedStyle(document.querySelector('.collection-card')).transitionDuration === '0s'`));
+  const reducedGlow = await c.ev(`(() => { const r = document.querySelector('.collection-card-image').getBoundingClientRect(); return [Math.round(r.left + r.width / 2), Math.round(r.top + r.height / 2)]; })()`);
+  await c.move(...reducedGlow); await sleep(500);
+  check('reduced motion: no spotlight glow follows the pointer', await c.ev(`!document.querySelector('.is-lit')`));
+  await c.move(8, 8);
   check('fan tiles do not spring', await c.ev(`getComputedStyle(document.querySelector('.fan-tile')).transitionDuration === '0s'`));
   const rl = await c.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
   await c.scroll(rl - 100, 900);
@@ -625,6 +635,10 @@ async function shopDesktop() {
   await c.visit('/collections/the-fragrance-collection', 2500);
   check('the collection page lists all ten with posters, slogans and prices, and the brand\u2019s own intro', await c.ev(`(() => { const l = [...document.querySelectorAll('.shop-card')]; return document.querySelector('h1').textContent === 'The Fragrance Collection' && l.length === 10 && l.every((a) => a.querySelector('img') && /\\u20b9999/.test(a.innerText)) && /Ten distinct scent identities/.test(document.body.innerText) && /each with its own character, atmosphere and signature notes/.test(document.body.innerText) && !document.querySelector('.shop-collections-nav'); })()`));
   check('collection images all load', await imagesOk(c));
+  const shopGlow = await c.ev(`(() => { const r = document.querySelectorAll('.shop-card-media')[2].getBoundingClientRect(); return [Math.round(r.left + r.width * 0.5), Math.round(r.top + r.height * 0.4)]; })()`);
+  await c.move(...shopGlow); await sleep(700);
+  check('on the collection page the cards glow too, each in its own colour (Velvet Rose here)', await c.ev(`(async () => { const { PRODUCTS } = await import('/js/data/catalogue.js'); const cards = [...document.querySelectorAll('.shop-card')]; const card = cards[2]; const glow = getComputedStyle(card.querySelector('.shop-card-media'), '::before'); return cards.every((a, i) => a.hasAttribute('data-spot') && a.style.getPropertyValue('--accent').trim() === PRODUCTS[i].accent) && card.classList.contains('is-lit') && glow.opacity === '1' && document.querySelectorAll('.is-lit').length === 1; })()`));
+  await c.move(8, 8); await sleep(300);
   await c.visit('/pages/about', 1800);
   check('the About page is an honest placeholder', await c.ev(`/has not been written yet/.test(document.querySelector('.shop-message').innerText) && document.querySelector('h1').textContent === 'About AMORE'`));
   await c.visit('/products/not-a-fragrance', 1800);

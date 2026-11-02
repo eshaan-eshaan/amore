@@ -137,7 +137,7 @@
 .fan-link { transition: letter-spacing .45s ease, color .2s; }
 .fan-link:hover { letter-spacing: .28em; }
 .collection-card-image { transition: box-shadow .5s ease; }
-.collection-card:hover .collection-card-image, .collection-card:focus-visible .collection-card-image { box-shadow: 0 30px 50px -24px rgba(61, 15, 23, .7), 0 0 0 1px var(--gold); }
+.collection-card:hover .collection-card-image, .collection-card:focus-visible .collection-card-image { box-shadow: 0 30px 50px -24px rgba(61, 15, 23, .7), 0 0 0 1px var(--gold), 0 0 44px -6px color-mix(in srgb, var(--accent, #b08a4a) 70%, transparent); }
 
 /* ── optional logo intro (off unless asked for: see js/polish.js) ── */
 .intro { cursor: pointer; position: fixed; inset: 0; z-index: 4000; display: grid; place-items: center; background: var(--night); transition: opacity .9s ease, visibility .9s; }

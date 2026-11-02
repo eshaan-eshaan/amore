@@ -5,6 +5,7 @@ import { initHero, initChase, initBands, initReveal } from './motion.js';
 import { initFan, initFooter } from './sections.js';
 import { initLineup, initParade, initSmoke } from './lineup.js';
 import { initCursor, initIntro, initSplit } from './polish.js';
+import { initSpotlight } from './spotlight.js';
 
 // styles that hide something until script reveals it only apply once this class is set
 document.documentElement.classList.add('js-ready');
@@ -26,3 +27,4 @@ initFan();
 initFooter();
 initSplit();
 initCursor();
+initSpotlight();
