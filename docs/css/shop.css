@@ -85,11 +85,11 @@
 /* the three key notes as three overlapping rings in the fragrance's colour (no order is implied) */
 .pdp-keynotes { display: flex; justify-content: center; padding: 4px 0 6px; }
 .pdp-orb {
-  display: grid; place-items: center; flex: none; width: 116px; height: 116px; margin: 0 -13px; border: 1px solid var(--accent); border-radius: 50%;
+  display: grid; place-items: center; flex: none; width: 120px; height: 120px; margin: 0 -10px; border: 1px solid var(--accent); border-radius: 50%;
   background: color-mix(in srgb, var(--accent) 13%, transparent); mix-blend-mode: multiply; text-align: center;
   animation: pdp-orb-in .9s cubic-bezier(.22, 1, .36, 1) both; animation-delay: calc(var(--i, 0) * 120ms);
 }
-.pdp-orb span { max-width: 74px; font-size: 10.5px; line-height: 1.35; letter-spacing: .1em; text-transform: uppercase; color: var(--wine); }
+.pdp-orb span { max-width: 78px; font-size: 10.5px; line-height: 1.35; letter-spacing: .1em; text-transform: uppercase; color: var(--wine); }
 @keyframes pdp-orb-in { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
 
 .pdp-price-block { display: grid; gap: 6px; justify-items: center; padding: 8px 0 2px; }
