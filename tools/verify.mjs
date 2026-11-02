@@ -302,14 +302,19 @@ async function desktop() {
   check('the bottle parade lists the ten bottles in catalogue order, each linking to its fragrance, plus a hidden second set for the loop', await c.ev(`(async () => { const { PRODUCTS } = await import('/js/data/catalogue.js'); const lis = [...document.querySelectorAll('.lineup-track li')]; const a = (li) => li.querySelector('a'); return lis.length === 20 && lis.slice(0, 10).every((li, i) => a(li).getAttribute('href') === PRODUCTS[i].url && li.querySelector('.lineup-name').textContent === PRODUCTS[i].name && li.querySelector('.lineup-slogan').textContent === PRODUCTS[i].slogan && !li.hasAttribute('aria-hidden')) && lis.slice(10).every((li, i) => li.getAttribute('aria-hidden') === 'true' && a(li).tabIndex === -1 && a(li).getAttribute('href') === PRODUCTS[i].url); })()`));
   const lstate = await c.ev(`(() => { const s = document.querySelector('[data-lineup]'); const i = s.querySelector('.lineup-item img'); const r = i.getBoundingClientRect(); return { isIn: s.classList.contains('is-in'), opacity: getComputedStyle(s.querySelector('.lineup-viewport')).opacity, h: Math.round(r.height), ratio: +(r.width / r.height).toFixed(4), loaded: i.complete && i.naturalWidth === 600, fit: getComputedStyle(i).objectFit }; })()`);
   check('the parade rises into view; its bottles stand 300-560px tall, whole (not cropped) and loaded', lstate.isIn && lstate.opacity === '1' && lstate.h >= 300 && lstate.h <= 560 && Math.abs(lstate.ratio - 600 / 1103) < 0.01 && lstate.loaded && lstate.fit !== 'cover', JSON.stringify(lstate));
-  check('the parade moves on its own', await c.ev(`(() => { const t = getComputedStyle(document.querySelector('.lineup-track')); return t.animationName === 'lineup' && t.animationPlayState === 'running'; })()`));
+  const trackX = () => c.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.lineup-track')).transform).e`);
+  const m1 = await trackX(); await sleep(800); const m2 = await trackX();
+  check('the parade drifts on its own, slowly to the left (a few dozen pixels a second)', m2 < m1 - 8 && m2 > m1 - 80 && (await c.ev(`document.querySelector('[data-lineup]').classList.contains('is-driven')`)), `${m1} -> ${m2}`);
   const lmid = await c.ev(`(() => { const r = [...document.querySelectorAll('.lineup-item')].map((el) => el.getBoundingClientRect()).find((b) => b.left > innerWidth * 0.35 && b.right < innerWidth * 0.8); return r ? [Math.round(r.left + r.width * 0.8), Math.round(r.top + r.height / 2)] : null; })()`);
   await c.move(...lmid); await sleep(500);
   check('over a bottle the stage takes that bottle’s colour', await c.ev(`(async () => { const { PRODUCTS } = await import('/js/data/catalogue.js'); const s = document.querySelector('[data-lineup]'); const hov = [...document.querySelectorAll('.lineup-item')].find((el) => el.matches(':hover')); return !!hov && s.style.getPropertyValue('--tint') === hov.dataset.accent && PRODUCTS.some((p) => p.accent === hov.dataset.accent); })()`));
   check('the bottle under the pointer tilts towards it, and the gold ring grows over the link', await c.ev(`(() => { const hov = [...document.querySelectorAll('.lineup-item')].find((el) => el.matches(':hover')); const ring = document.querySelector('.cursor-ring'); return !!hov && parseFloat(hov.style.getPropertyValue('--ry')) > 3 && getComputedStyle(hov.querySelector('img')).transform.startsWith('matrix3d') && !!ring && ring.classList.contains('is-on') && ring.classList.contains('is-link') && getComputedStyle(ring).pointerEvents === 'none'; })()`));
-  check('the parade pauses while the pointer is over it', await c.ev(`getComputedStyle(document.querySelector('.lineup-track')).animationPlayState === 'paused'`));
-  await c.move(8, 8); await sleep(400);
-  check('...and carries on when the pointer leaves', await c.ev(`getComputedStyle(document.querySelector('.lineup-track')).animationPlayState === 'running'`));
+  await sleep(1000); // the speed eases to zero rather than stopping dead
+  const h1 = await trackX(); await sleep(600); const h2 = await trackX();
+  check('the parade rests while the mouse is over it', Math.abs(h2 - h1) < 2.5, `${h1} -> ${h2}`);
+  await c.move(8, 8); await sleep(500);
+  const g1 = await trackX(); await sleep(700); const g2 = await trackX();
+  check('...and drifts on again when the mouse leaves', g2 < g1 - 8, `${g1} -> ${g2}`);
   check('smoke behind the bottles: a silent video loop (the 1280 file) is playing, screen-blended, decorative, and sits behind the heading and the bottles', await c.ev(`(async () => { const s = document.querySelector('.lineup-smoke'); const v = s.querySelector('video'); const t0 = v.currentTime; await new Promise((r) => setTimeout(r, 700)); const after = (el) => !!(s.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING); const st = getComputedStyle(s); return v.currentSrc.endsWith('amore-smoke-1280.mp4') && v.muted && v.loop && v.playsInline && !v.paused && v.readyState >= 2 && v.currentTime > t0 && v.classList.contains('is-playing') && s.getAttribute('aria-hidden') === 'true' && st.mixBlendMode === 'screen' && st.pointerEvents === 'none' && after(document.querySelector('.lineup-head')) && after(document.querySelector('.lineup-viewport')); })()`));
   const bandTop = await c.ev(`document.querySelector('[data-band]').getBoundingClientRect().top + scrollY`);
   const bandX = () => c.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.band-track')).transform).e`);
@@ -396,18 +401,96 @@ async function phone() {
   c.close();
 }
 
+// ───────────────────────── press and slide (the bottle parade) ─────────────────────────
+async function parade() {
+  console.log('\n=== PRESS AND SLIDE (the bottle parade)');
+  const c = await open({ w: 1440, h: 900 });
+  await c.goto(3500);
+  const lt = await c.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
+  await c.scroll(lt + 10, 2200);
+  const X = () => c.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.lineup-track')).transform).e`);
+  const mouse = (type, x, y, extra = {}) => c.send('Input.dispatchMouseEvent', { type, x, y, button: 'left', buttons: type === 'mouseReleased' ? 0 : 1, clickCount: 1, pointerType: 'mouse', ...extra });
+  const spot = await c.ev(`(() => { const r = [...document.querySelectorAll('.lineup-item')].map((el) => el.getBoundingClientRect()).find((b) => b.left > innerWidth * 0.4 && b.right < innerWidth * 0.75); return [Math.round(r.left + r.width * 0.5), Math.round(r.top + r.height * 0.45)]; })()`);
+
+  // a sideways trackpad swipe
+  await c.move(...spot); await sleep(1500);
+  const w0 = await X();
+  await c.send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: spot[0], y: spot[1], deltaX: 240, deltaY: 0 }); await sleep(200);
+  const w1 = await X();
+  check('a sideways trackpad swipe moves the row (240px in, 240px out), vertical scrolling is left alone', Math.abs((w1 - w0) + 240) < 8 && (await c.ev(`getComputedStyle(document.querySelector('.lineup-viewport')).touchAction === 'pan-y'`)), `${w0} -> ${w1}`);
+
+  // press and slide with the mouse
+  const x0 = await X();
+  await mouse('mousePressed', spot[0], spot[1]);
+  for (let i = 1; i <= 10; i++) { await mouse('mouseMoved', spot[0] - i * 30, spot[1]); await sleep(16); }
+  const x1 = await X();
+  check('pressing and sliding left moves the row with the pointer (300px in, 300px out), with a grabbing cursor', Math.abs((x1 - x0) + 300) < 12 && await c.ev(`document.querySelector('[data-lineup]').classList.contains('is-dragging') && getComputedStyle(document.querySelector('.lineup-viewport')).cursor === 'grabbing'`), `${x0} -> ${x1}`);
+  await mouse('mouseReleased', spot[0] - 300, spot[1]);
+  await sleep(120); const a1 = await X(); await sleep(250); const a2 = await X();
+  check('letting go while still moving glides on', a2 < a1 - 25, `${a1} -> ${a2}`);
+  await sleep(3200); const s1 = await X(); await sleep(500); const s2 = await X();
+  check('...and settles (the mouse is still resting on the row)', Math.abs(s2 - s1) < 3, `${s1} -> ${s2}`);
+  check('the click that follows a drag does not open the bottle under the pointer', await c.ev(`location.pathname === '/' && !document.querySelector('[data-lineup]').classList.contains('is-dragging')`));
+
+  // far to the right: still endless
+  await c.move(...spot); await sleep(100);
+  await mouse('mousePressed', spot[0], spot[1]);
+  for (let i = 1; i <= 18; i++) { await mouse('mouseMoved', spot[0] + i * 40, spot[1]); await sleep(10); }
+  const edge = await c.ev(`(() => { const t = document.querySelector('.lineup-track').getBoundingClientRect(); const v = document.querySelector('.lineup-viewport').getBoundingClientRect(); return [t.left <= v.left + 1, t.right >= v.right - 1, new DOMMatrix(getComputedStyle(document.querySelector('.lineup-track')).transform).e <= 0]; })()`);
+  await mouse('mouseReleased', spot[0] + 720, spot[1]);
+  check('dragging far to the right never runs out of bottles (the row is endless both ways)', edge.every(Boolean), JSON.stringify(edge));
+
+  // keyboard: Tab to a bottle that is out of sight slides it into view
+  await c.move(8, 8); await sleep(2500);
+  await c.key('ArrowRight', 'ArrowRight', 39); // a real key press (not a bare modifier) switches the page to keyboard mode, so the focus ring (:focus-visible) applies like a real Tab
+  const far = await c.ev(`(() => { const items = [...document.querySelectorAll('.lineup-item')].slice(0, 10); const i = items.findIndex((el) => { const r = el.getBoundingClientRect(); return r.right < 0 || r.left > innerWidth; }); if (i < 0) return -1; items[i].focus(); return i; })()`);
+  await sleep(400);
+  check('a bottle that is out of sight slides into view when it gets keyboard focus (and the browser never scrolls the row itself)', far >= 0 && await c.ev(`(() => { const el = document.activeElement; const r = el.getBoundingClientRect(); const v = document.querySelector('.lineup-viewport'); const vr = v.getBoundingClientRect(); return el.classList.contains('lineup-item') && el.matches(':focus-visible') && r.left >= vr.left - 1 && r.right <= vr.right + 1 && v.scrollLeft === 0; })()`), `bottle ${far}`);
+  await c.ev(`document.activeElement.blur()`);
+
+  // a plain click still opens the bottle
+  const click = await c.ev(`(() => { const r = [...document.querySelectorAll('.lineup-item')].map((el) => ({ el, r: el.getBoundingClientRect() })).find((o) => o.r.left > innerWidth * 0.3 && o.r.right < innerWidth * 0.75); return JSON.stringify({ x: Math.round(r.r.left + r.r.width * 0.5), y: Math.round(r.r.top + r.r.height * 0.45), href: r.el.getAttribute('href') }); })()`);
+  const where = JSON.parse(click);
+  await c.move(where.x, where.y); await sleep(200);
+  await mouse('mousePressed', where.x, where.y); await mouse('mouseReleased', where.x, where.y);
+  await sleep(1800);
+  check('a plain click (no drag) still opens the bottle', await c.ev(`location.pathname === ${JSON.stringify(where.href)}`), where.href);
+  check('no console errors during the mouse run', c.problems.length === 0, c.problems.slice(0, 3).join(' | '));
+  c.close();
+
+  // a finger on a phone
+  const d = await open({ w: 390, h: 844, mobile: true });
+  await d.goto(3500);
+  const lt2 = await d.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
+  await d.scroll(lt2 - 40, 2200);
+  const dX = () => d.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.lineup-track')).transform).e`);
+  const rowY = await d.ev(`Math.round(document.querySelector('.lineup-viewport').getBoundingClientRect().top + 180)`);
+  const touch = (type, x) => d.send('Input.dispatchTouchEvent', { type, touchPoints: type === 'touchEnd' ? [] : [{ x, y: rowY, id: 1 }] });
+  const t0 = await dX();
+  await touch('touchStart', 340);
+  for (let i = 1; i <= 10; i++) { await touch('touchMove', 340 - i * 25); await sleep(16); }
+  const t1 = await dX();
+  await touch('touchEnd', 0);
+  check('on a phone a finger can press and slide the row (it follows the finger to the left)', t1 < t0 - 190 && t1 > t0 - 260, `${t0} -> ${t1}`);
+  check('on a phone the row leaves vertical swipes to the page', await d.ev(`getComputedStyle(document.querySelector('.lineup-viewport')).touchAction === 'pan-y'`));
+  check('no console errors during the touch run', d.problems.length === 0, d.problems.slice(0, 3).join(' | '));
+  d.close();
+}
+
 // ───────────────────────── logo intro (plays once per visit) ─────────────────────────
 async function intro() {
   console.log('\n=== LOGO INTRO');
   const c = await open({ w: 1440, h: 900 });
-  await c.visit('/', 700);
+  // wait for the intro to show up instead of guessing how long the scripts take to load on a busy machine
+  const appears = async (browser) => { for (let i = 0; i < 40; i++) { if (await browser.ev(`!!document.querySelector('.intro')`)) return true; await sleep(100); } return false; };
+  await c.visit('/', 100); await appears(c);
   check('first visit: the logo intro plays over a dark screen, the page is locked underneath and the head holds the dark cover', await c.ev(`(async () => { const i = document.querySelector('.intro'); const src = await (await fetch('/')).text(); return !!i && i.querySelector('img').getAttribute('src').endsWith('amore-monogram-light.png') && document.documentElement.classList.contains('no-scroll') && getComputedStyle(i).position === 'fixed' && !document.documentElement.classList.contains('intro-pending') && src.includes('intro-pending'); })()`));
   check('the intro’s picture is preloaded because the intro is about to play', await c.ev(`!!document.head.querySelector('link[rel="preload"][as="image"][href$="amore-monogram-light.png"]')`));
   await sleep(3600);
   check('...it removes itself after about three seconds, frees the page and remembers it was shown', await c.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('no-scroll') && sessionStorage.getItem('amore-intro-seen') === '1'`));
   await c.visit('/', 1200);
   check('later visits to the homepage in the same tab skip it', await c.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('intro-pending')`));
-  await c.visit('/?intro', 700);
+  await c.visit('/?intro', 100); await appears(c);
   check('/?intro plays it again', await c.ev(`!!document.querySelector('.intro')`));
   await c.click(700, 450); await sleep(1400);
   check('a click skips it at once and frees the page', await c.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('no-scroll')`));
@@ -435,7 +518,17 @@ async function reduced() {
   check('reduced motion: no word-by-word headlines, no gold ring, and the moving bands sit still', await c.ev(`document.querySelectorAll('.split-word').length === 0 && !document.querySelector('.cursor-ring') && [...document.querySelectorAll('.band-track')].every((t) => t.style.transform === '')`));
   check('the bottle parade stands still, shows each bottle once and scrolls sideways by hand', await c.ev(`(() => { const t = document.querySelector('.lineup-track'); const v = document.querySelector('.lineup-viewport'); return getComputedStyle(t).animationName === 'none' && getComputedStyle(v).transitionDuration === '0s' && getComputedStyle(v).overflowX === 'auto' && [...t.children].filter((li) => getComputedStyle(li).display !== 'none').length === 10 && v.scrollWidth > v.clientWidth; })()`));
   await c.visit('/', 900);
+  const rl2 = await c.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
+  await c.scroll(rl2 - 100, 900); // the reload put the page back at the top; the smoke and the drag tests need the parade on screen
   check('reduced motion: the smoke stays a still frame (the video is never fetched or shown)', await c.ev(`(() => { const v = document.querySelector('.lineup-smoke video'); return !v.getAttribute('src') && getComputedStyle(v).display === 'none' && /amore-smoke-poster\\.jpg/.test(getComputedStyle(document.querySelector('.lineup-smoke')).backgroundImage); })()`));
+  const rsp = await c.ev(`(() => { const r = [...document.querySelectorAll('.lineup-item')].map((el) => el.getBoundingClientRect()).find((b) => b.left > 100 && b.right < innerWidth - 100); return [Math.round(r.left + r.width / 2), Math.round(r.top + r.height * 0.45)]; })()`);
+  await c.move(...rsp); await sleep(200);
+  await c.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: rsp[0], y: rsp[1], button: 'left', buttons: 1, clickCount: 1, pointerType: 'mouse' });
+  for (let i = 1; i <= 8; i++) { await c.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: rsp[0] - i * 25, y: rsp[1], button: 'left', buttons: 1, pointerType: 'mouse' }); await sleep(16); }
+  await c.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: rsp[0] - 200, y: rsp[1], button: 'left', buttons: 0, clickCount: 1, pointerType: 'mouse' });
+  await sleep(300);
+  const rstate = await c.ev(`JSON.stringify({ scrollLeft: document.querySelector('.lineup-viewport').scrollLeft, path: location.pathname, spot: ${JSON.stringify(rsp)} })`);
+  check('reduced motion: the strip can still be pressed and slid with the mouse (it scrolls by about the distance dragged), and nothing opens', JSON.parse(rstate).scrollLeft > 150 && JSON.parse(rstate).path === '/', rstate);
   check('reduced motion: no logo intro and no dark cover left behind', await c.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('intro-pending') && !document.documentElement.classList.contains('no-scroll')`));
   await c.visit('/products/royal-oud', 1500);
   check('reduced motion: the product bottle does not float or tilt and the rings do not animate', await c.ev(`getComputedStyle(document.querySelector('.pdp-bottle-float')).animationName === 'none' && getComputedStyle(document.querySelector('.pdp-orb')).animationName === 'none' && getComputedStyle(document.querySelector('.pdp-bottle img')).transform === 'none'`));
@@ -694,7 +787,7 @@ async function pagesBuild() {
   }
 }
 
-try { await units(); await desktop(); await intro(); await phone(); await reduced(); await shopDesktop(); await shopPhone(); await pagesBuild(); } catch (e) { failures.push('test run crashed: ' + e.message); console.log('CRASH', e.message); }
+try { await units(); await desktop(); await parade(); await intro(); await phone(); await reduced(); await shopDesktop(); await shopPhone(); await pagesBuild(); } catch (e) { failures.push('test run crashed: ' + e.message); console.log('CRASH', e.message); }
 console.log(`\n${passed} passed, ${failures.length} failed`);
 for (const f of failures) console.log('  FAIL: ' + f);
 process.exit(failures.length ? 1 : 0);
