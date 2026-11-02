@@ -113,6 +113,9 @@ async function units() {
   const bottles = P.map((p) => join(ROOT, 'assets', p.bottle.file));
   check('all ten bottle cut-outs are in assets/bottles as WebP files with transparency, of the size the data states', bottles.every((f, i) => existsSync(f) && !!webpInfo(f)?.alpha && webpInfo(f).size === `${P[i].bottle.width}x${P[i].bottle.height}`), bottles.filter((f) => !existsSync(f)).join(', '));
   check('every fragrance has an accent colour (#rrggbb) for the bottle stage', P.every((p) => /^#[0-9a-f]{6}$/.test(p.accent)));
+  const mp4Ready = (f) => { const b = readFileSync(f); const moov = b.indexOf('moov'); return b.toString('latin1', 4, 8) === 'ftyp' && moov > 0 && moov < b.indexOf('mdat'); }; // an MP4 whose index comes first starts playing before it has all downloaded
+  const video = (n) => join(ROOT, 'assets', 'video', n);
+  check('the smoke loop files exist (1280 and 640 wide MP4s with the index first, plus a still frame) and stay small enough for a first visit', ['amore-smoke-1280.mp4', 'amore-smoke-640.mp4', 'amore-smoke-poster.jpg'].every((n) => existsSync(video(n))) && statSync(video('amore-smoke-1280.mp4')).size < 3e6 && statSync(video('amore-smoke-640.mp4')).size < 1.5e6 && statSync(video('amore-smoke-poster.jpg')).size < 150e3 && mp4Ready(video('amore-smoke-1280.mp4')) && mp4Ready(video('amore-smoke-640.mp4')));
   const logoFiles = ['amore-wordmark-dark.png', 'amore-wordmark-light.png', 'amore-lockup-dark.png', 'amore-lockup-light.png', 'favicon.png'].map((f) => join(ROOT, 'assets', 'logo', f));
   check('the logo files exist (bronze and champagne wordmark and lockup, plus the tab icon) and are transparent PNGs', logoFiles.every((f) => existsSync(f) && readFileSync(f)[25] === 6), logoFiles.filter((f) => !existsSync(f)).join(', '));
   check('one collection holds all ten; routes are /products, /collections, /search, /checkout', cat.COLLECTIONS.length === 1 && cat.COLLECTIONS[0].products.length === 10 && cat.productUrl('royal-oud') === '/products/royal-oud' && cat.collectionUrl('x') === '/collections/x' && cat.searchUrl('a b') === '/search?q=a%20b' && cat.CHECKOUT_URL === '/checkout');
@@ -216,6 +219,8 @@ async function desktop() {
   check('announcement rotates on its own, about every 3s, and loops', seen.length >= 3 && new Set(seen.map((s) => s.text)).size === 2 && gaps.every((g) => g > 2500 && g < 3600), seen.map((s) => `${s.at}ms ${s.text}`).join(' | '));
   check('announcement carries the brand\u2019s own words and its close button stays hidden', await c.ev(`(() => { const t = document.querySelector('#announcement').textContent; const b = document.querySelector('[data-announcement-close]'); return /Passion in every drop/.test(t) && /Ten distinct scent identities/.test(t) && b.hidden && getComputedStyle(b).display === 'none' && document.querySelector('#announcement').offsetHeight === 30; })()`));
 
+  check('the smoke video is not fetched until the bottle section is near the screen', await c.ev(`!document.querySelector('.lineup-smoke video').getAttribute('src')`));
+
   // hero
   check('the hero stage holds all ten posters twice (the second set makes the loop seamless)', await c.ev(`document.querySelectorAll('.hero-strip img').length === 20 && getComputedStyle(document.querySelector('.hero-strip')).animationName !== 'none'`));
   check('the poster strip starts below the header so the logo never covers the posters\u2019 own "AMORE"', await c.ev(`document.querySelector('.hero-strip').getBoundingClientRect().top >= 80`));
@@ -305,12 +310,15 @@ async function desktop() {
   check('the parade pauses while the pointer is over it', await c.ev(`getComputedStyle(document.querySelector('.lineup-track')).animationPlayState === 'paused'`));
   await c.move(8, 8); await sleep(400);
   check('...and carries on when the pointer leaves', await c.ev(`getComputedStyle(document.querySelector('.lineup-track')).animationPlayState === 'running'`));
+  check('smoke behind the bottles: a silent video loop (the 1280 file) is playing, screen-blended, decorative, and sits behind the heading and the bottles', await c.ev(`(async () => { const s = document.querySelector('.lineup-smoke'); const v = s.querySelector('video'); const t0 = v.currentTime; await new Promise((r) => setTimeout(r, 700)); const after = (el) => !!(s.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING); const st = getComputedStyle(s); return v.currentSrc.endsWith('amore-smoke-1280.mp4') && v.muted && v.loop && v.playsInline && !v.paused && v.readyState >= 2 && v.currentTime > t0 && v.classList.contains('is-playing') && s.getAttribute('aria-hidden') === 'true' && st.mixBlendMode === 'screen' && st.pointerEvents === 'none' && after(document.querySelector('.lineup-head')) && after(document.querySelector('.lineup-viewport')); })()`));
   const bandTop = await c.ev(`document.querySelector('[data-band]').getBoundingClientRect().top + scrollY`);
   const bandX = () => c.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.band-track')).transform).e`);
   await c.scroll(bandTop - 700, 500); const a1 = await bandX();
   await c.scroll(bandTop - 200, 500); const a2 = await bandX();
   check('the moving headline slides left as you scroll down (and there is just the one)', (await c.ev(`document.querySelectorAll('[data-band]').length === 1`)) && a2 < a1 - 50, `${a1} -> ${a2}`);
   check('the band carries the brand’s own slogan, is decorative, and never leaves a gap at either edge', await c.ev(`(() => { const a = document.querySelector('[data-band]'); const t = a.querySelector('.band-track').getBoundingClientRect(); return a.getAttribute('aria-hidden') === 'true' && /Passion in every drop/.test(a.textContent) && t.left <= 1 && t.right >= innerWidth - 1; })()`));
+  await c.scroll(0, 700);
+  check('the smoke video pauses when the section is far off screen (no needless work for the browser)', await c.ev(`document.querySelector('.lineup-smoke video').paused`));
   const sg = await c.ev(`document.querySelector('[data-reveal-grid]').getBoundingClientRect().top + scrollY`);
   await c.scroll(sg - 200, 1800);
   check('the collection grid shows ten cards in five columns, each linking to its fragrance with the \u20b9999 price', await c.ev(`(() => { const g = document.querySelector('[data-reveal-grid]'); const cards = [...g.querySelectorAll('.collection-card')]; return getComputedStyle(g).gridTemplateColumns.split(' ').length === 5 && cards.length === 10 && cards.every((a) => /^\\/products\\//.test(a.getAttribute('href')) && /₹999/.test(a.innerText) && a.querySelector('img').naturalWidth > 0); })()`));
@@ -365,6 +373,7 @@ async function phone() {
   const lp = await c.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
   await c.scroll(lp - 40, 1600);
   check('phone: the bottle parade shows whole bottles 260-400px tall that fit the screen, and nothing sticks out sideways', await c.ev(`(() => { const s = document.querySelector('[data-lineup]'); const r = s.querySelector('.lineup-item img').getBoundingClientRect(); const t = s.querySelector('.lineup-title').getBoundingClientRect(); return s.classList.contains('is-in') && r.height >= 260 && r.height <= 400 && r.height < innerHeight * 0.6 && t.left >= 0 && t.right <= innerWidth && document.documentElement.scrollWidth <= innerWidth; })()`));
+  check('phone: the smaller 640 smoke file is the one fetched', await c.ev(`(document.querySelector('.lineup-smoke video').getAttribute('src') || '').endsWith('amore-smoke-640.mp4')`));
   check('phone: no gold ring (touch screen) and the moving band fits the screen', await c.ev(`!document.querySelector('.cursor-ring') && [...document.querySelectorAll('[data-band]')].every((b) => b.getBoundingClientRect().width <= innerWidth + 1)`));
   check('collection grid is two columns on phones', await c.ev(`getComputedStyle(document.querySelector('[data-reveal-grid]')).gridTemplateColumns.split(' ').length === 2`));
   const fan = await c.ev(`document.querySelector('[data-fan-section]').getBoundingClientRect().top + scrollY`);
@@ -426,6 +435,7 @@ async function reduced() {
   check('reduced motion: no word-by-word headlines, no gold ring, and the moving bands sit still', await c.ev(`document.querySelectorAll('.split-word').length === 0 && !document.querySelector('.cursor-ring') && [...document.querySelectorAll('.band-track')].every((t) => t.style.transform === '')`));
   check('the bottle parade stands still, shows each bottle once and scrolls sideways by hand', await c.ev(`(() => { const t = document.querySelector('.lineup-track'); const v = document.querySelector('.lineup-viewport'); return getComputedStyle(t).animationName === 'none' && getComputedStyle(v).transitionDuration === '0s' && getComputedStyle(v).overflowX === 'auto' && [...t.children].filter((li) => getComputedStyle(li).display !== 'none').length === 10 && v.scrollWidth > v.clientWidth; })()`));
   await c.visit('/', 900);
+  check('reduced motion: the smoke stays a still frame (the video is never fetched or shown)', await c.ev(`(() => { const v = document.querySelector('.lineup-smoke video'); return !v.getAttribute('src') && getComputedStyle(v).display === 'none' && /amore-smoke-poster\\.jpg/.test(getComputedStyle(document.querySelector('.lineup-smoke')).backgroundImage); })()`));
   check('reduced motion: no logo intro and no dark cover left behind', await c.ev(`!document.querySelector('.intro') && !document.documentElement.classList.contains('intro-pending') && !document.documentElement.classList.contains('no-scroll')`));
   await c.visit('/products/royal-oud', 1500);
   check('reduced motion: the product bottle does not float or tilt and the rings do not animate', await c.ev(`getComputedStyle(document.querySelector('.pdp-bottle-float')).animationName === 'none' && getComputedStyle(document.querySelector('.pdp-orb')).animationName === 'none' && getComputedStyle(document.querySelector('.pdp-bottle img')).transform === 'none'`));
@@ -616,10 +626,22 @@ async function pagesBuild() {
   check('every link, image, script and stylesheet in the built pages stays inside /amore/ and points at a file that exists', dead.length === 0 && escaped.length === 0, [...dead, ...escaped].slice(0, 4).join(' | '));
 
   // a small server that behaves like GitHub Pages: files and folder indexes under /amore/, a redirect to the trailing slash, 404.html for the rest
-  const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
+  const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.webp': 'image/webp', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' };
   const server = createServer((req, res) => {
     const url = new globalThis.URL(req.url, 'http://x');
-    const send = (code, file) => { res.writeHead(code, { 'content-type': types[extname(file)] || 'application/octet-stream' }); res.end(readFileSync(file)); };
+    const send = (code, file) => { // like GitHub Pages, files can be fetched in byte ranges (browsers ask for video that way)
+      const body = readFileSync(file); const type = types[extname(file)] || 'application/octet-stream';
+      const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
+      if (code === 200 && range && (range[1] || range[2])) {
+        const start = range[1] ? Number(range[1]) : body.length - Number(range[2]);
+        const end = range[1] && range[2] ? Math.min(Number(range[2]), body.length - 1) : body.length - 1;
+        res.writeHead(206, { 'content-type': type, 'accept-ranges': 'bytes', 'content-range': `bytes ${start}-${end}/${body.length}`, 'content-length': end - start + 1 });
+        res.end(body.subarray(start, end + 1));
+        return;
+      }
+      res.writeHead(code, { 'content-type': type, 'accept-ranges': 'bytes' });
+      res.end(body);
+    };
     if (!url.pathname.startsWith(BASE)) { res.writeHead(404); res.end('not here'); return; }
     const rel = decodeURIComponent(url.pathname.slice(BASE.length));
     const file = join(out, rel);
@@ -639,6 +661,8 @@ async function pagesBuild() {
     await go(c, '/amore/?nointro', 3500);
     check('Pages homepage: no console errors or failed requests, logo and hero images load from /amore/', c.problems.length === 0 && await c.ev(`(() => { const logo = [...document.querySelectorAll('.header-logo img')].find((i) => i.getBoundingClientRect().width > 0); const hero = document.querySelector('.hero-strip img'); return logo.src.includes('/amore/assets/logo/') && logo.naturalWidth > 0 && hero.src.includes('/amore/assets/') && hero.naturalWidth > 0; })()`), c.problems.slice(0, 3).join(' | '));
     check('Pages homepage: every internal link starts with /amore/', await c.ev(`[...document.querySelectorAll('a[href]')].filter((a) => { const h = a.getAttribute('href'); return h.startsWith('/') && !h.startsWith('/amore/'); }).length === 0`));
+    await c.ev(`document.querySelector('[data-lineup]').scrollIntoView()`); await sleep(2800);
+    check('Pages homepage: the smoke video plays from /amore/assets/video/ (byte ranges work) and the still frame is found', c.problems.length === 0 && await c.ev(`(async () => { const v = document.querySelector('.lineup-smoke video'); const bg = getComputedStyle(document.querySelector('.lineup-smoke')).backgroundImage; const still = bg.match(/url\\("?([^")]+)"?\\)/)[1]; const ok = (await fetch(still)).ok; return v.getAttribute('src').startsWith('/amore/assets/video/amore-smoke-1280.mp4') && !v.paused && v.readyState >= 2 && v.currentTime > 0 && /\\/amore\\/assets\\/video\\/amore-smoke-poster\\.jpg$/.test(still) && ok; })()`), c.problems.slice(0, 3).join(' | '));
 
     await go(c, '/amore/products/royal-oud', 3000); // no trailing slash: the host redirects to it
     check('Pages product page (reached without the trailing slash): ROYAL OUD, ₹999, poster and bottle load, links keep /amore/', await c.ev(`(() => { const p = document.querySelector('.pdp-poster img'); const b = document.querySelector('.pdp-bottle img'); const crumbs = [...document.querySelectorAll('.shop-breadcrumb a')].map((a) => a.getAttribute('href')).join(); return location.pathname === '/amore/products/royal-oud/' && document.querySelector('h1').textContent === 'ROYAL OUD' && document.querySelector('[data-price]').textContent === '\\u20b9999' && p.naturalWidth === 261 && b.naturalWidth === 600 && p.getAttribute('src').startsWith('/amore/assets/') && document.querySelector('.pdp-back').getAttribute('href') === '/amore/collections/the-fragrance-collection' && crumbs === '/amore/,/amore/collections/the-fragrance-collection'; })()`));

@@ -1,6 +1,7 @@
 // "Meet the ten": the stage takes on the colour of the bottle in the middle of the screen (or under the pointer),
 // and a bottle tilts a little towards the mouse
-import { $, $$, reduced } from './util.js';
+import { $, $$, phone, reduced } from './util.js';
+import { withBase } from './base.js';
 
 export function initLineup() {
   const section = $('[data-lineup]');
@@ -49,4 +50,34 @@ export function initLineup() {
     item.addEventListener('focus', () => { hovered = item; paint(); });
     item.addEventListener('blur', leave);
   });
+}
+
+/* ── smoke behind the bottles ──
+   A silent looping video (assets/video). It is fetched only when the section is near the screen, plays only while the section is
+   on screen, uses a smaller file on phones, and is left out (the still frame stays) for reduced motion and data-saver. */
+export function initSmoke() {
+  const box = $('.lineup-smoke');
+  const video = box && $('video', box);
+  if (!video) return;
+  const connection = navigator.connection;
+  if (reduced.matches || (connection && connection.saveData)) return;
+
+  let loaded = false;
+  let inView = false;
+  const sync = () => {
+    if (inView && !document.hidden) {
+      if (!loaded) {
+        loaded = true;
+        video.src = withBase(phone.matches ? video.dataset.srcSmall : video.dataset.src);
+      }
+      video.play().then(() => video.classList.add('is-playing')).catch(() => { /* blocked or failed: the still frame stays */ });
+    } else if (loaded) {
+      video.pause();
+    }
+  };
+  new IntersectionObserver((entries) => {
+    inView = entries.some((entry) => entry.isIntersecting);
+    sync();
+  }, { rootMargin: '300px 0px' }).observe(box);
+  document.addEventListener('visibilitychange', sync);
 }

@@ -3,7 +3,7 @@ import { initAnnouncement, initHeader, initDrawers, initMenuTiles } from './chro
 import { initCart } from './cart-ui.js';
 import { initHero, initChase, initBands, initReveal } from './motion.js';
 import { initFan, initFooter } from './sections.js';
-import { initLineup } from './lineup.js';
+import { initLineup, initSmoke } from './lineup.js';
 import { initCursor, initIntro, initSplit } from './polish.js';
 
 // styles that hide something until script reveals it only apply once this class is set
@@ -20,6 +20,7 @@ initChase();
 initBands();
 initReveal();
 initLineup();
+initSmoke();
 initFan();
 initFooter();
 initSplit();
