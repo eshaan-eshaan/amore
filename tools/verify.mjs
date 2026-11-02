@@ -297,6 +297,7 @@ async function desktop() {
   const stTop = await c.ev(`document.querySelector('.statement').getBoundingClientRect().top + scrollY`);
   await c.scroll(stTop - 100, 1800);
   check('the statement headline rises word by word and still reads "Passion in every drop"', await c.ev(`(() => { const h = document.querySelector('.statement-title'); return h.classList.contains('is-split') && h.classList.contains('is-in') && h.querySelectorAll('.split-word').length === 4 && h.textContent === 'Passion in every drop'; })()`));
+  check('gold shimmer: once risen, each word of the headline carries a gleam that runs word by word (staggered), and the moving band glints too', await c.ev(`(() => { const spans = [...document.querySelectorAll('.statement-title .split-word > span')]; const delays = spans.map((s) => parseFloat(getComputedStyle(s).animationDelay)); const band = getComputedStyle(document.querySelector('.band-set span')); return spans.length === 4 && spans.every((s) => getComputedStyle(s).animationName === 'headline-shine' && getComputedStyle(s).backgroundClip === 'text') && delays.every((d, i) => i === 0 || d > delays[i - 1]) && band.animationName === 'band-shine'; })()`));
   const lt = await c.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
   await c.scroll(lt - 60, 1800);
   check('the bottle parade lists the ten bottles in catalogue order, each linking to its fragrance, plus a hidden second set for the loop', await c.ev(`(async () => { const { PRODUCTS } = await import('/js/data/catalogue.js'); const lis = [...document.querySelectorAll('.lineup-track li')]; const a = (li) => li.querySelector('a'); return lis.length === 20 && lis.slice(0, 10).every((li, i) => a(li).getAttribute('href') === PRODUCTS[i].url && li.querySelector('.lineup-name').textContent === PRODUCTS[i].name && li.querySelector('.lineup-slogan').textContent === PRODUCTS[i].slogan && !li.hasAttribute('aria-hidden')) && lis.slice(10).every((li, i) => li.getAttribute('aria-hidden') === 'true' && a(li).tabIndex === -1 && a(li).getAttribute('href') === PRODUCTS[i].url); })()`));
@@ -332,8 +333,11 @@ async function desktop() {
   const glowAt = await c.ev(`(() => { const r = document.querySelectorAll('.collection-card-image')[1].getBoundingClientRect(); return [Math.round(r.left + r.width * 0.3), Math.round(r.top + r.height * 0.6)]; })()`);
   await c.move(...glowAt); await sleep(700);
   check('hovering a poster card lights it: the light follows the pointer, is drawn in that colour, and an aura shows round the card', await c.ev(`(() => { const card = document.querySelectorAll('.collection-card')[1]; const box = card.querySelector('.collection-card-image'); const r = box.getBoundingClientRect(); const mx = parseFloat(card.style.getPropertyValue('--mx')); const my = parseFloat(card.style.getPropertyValue('--my')); const glow = getComputedStyle(box, '::before'); return card.classList.contains('is-lit') && Math.abs(mx - r.width * 0.3) < 4 && Math.abs(my - r.height * 0.6) < 4 && glow.opacity === '1' && glow.mixBlendMode === 'screen' && glow.backgroundImage.includes('radial-gradient') && getComputedStyle(box).boxShadow.split('rgb').length > 3 && document.querySelectorAll('.is-lit').length === 1; })()`));
-  await c.move(8, 8); await sleep(700);
+  await sleep(300);
+  check('focus: while one card is lit the other nine in the grid soften and dim, and the lit one stays crisp', await c.ev(`(() => { const grid = document.querySelector('[data-reveal-grid]'); const f = (i) => getComputedStyle(document.querySelectorAll('.collection-card-image')[i]).filter; const label = (i) => getComputedStyle(document.querySelectorAll('.collection-card-label')[i]); return grid.classList.contains('is-focusing') && f(1) === 'none' && [0, 2, 3, 4, 5, 6, 7, 8, 9].every((i) => /blur/.test(f(i)) && /brightness/.test(f(i)) && parseFloat(label(i).opacity) < 0.7) && parseFloat(label(1).opacity) === 1; })()`));
+  await c.move(8, 8); await sleep(1000);
   check('...and the light fades out when the pointer leaves', await c.ev(`!document.querySelector('.is-lit') && getComputedStyle(document.querySelector('.collection-card-image'), '::before').opacity === '0'`));
+  check('...and the grid is back to normal (nothing blurred or dimmed)', await c.ev(`!document.querySelector('.is-focusing') && [...document.querySelectorAll('.collection-card-image')].every((e) => getComputedStyle(e).filter === 'none') && [...document.querySelectorAll('.collection-card-label')].every((e) => getComputedStyle(e).opacity === '1')`));
   const ch = await c.ev(`document.querySelector('[data-chase]').getBoundingClientRect().top + scrollY`);
   await c.scroll(ch - 800);
   const tx = await c.ev(`new DOMMatrix(getComputedStyle(document.querySelector('.chase-arrival-image.is-left [data-chase-image]')).transform).e`);
@@ -520,11 +524,12 @@ async function reduced() {
   check('collection cards are simply there (no fade)', await c.ev(`getComputedStyle(document.querySelector('.collection-card')).transitionDuration === '0s'`));
   const reducedGlow = await c.ev(`(() => { const r = document.querySelector('.collection-card-image').getBoundingClientRect(); return [Math.round(r.left + r.width / 2), Math.round(r.top + r.height / 2)]; })()`);
   await c.move(...reducedGlow); await sleep(500);
-  check('reduced motion: no spotlight glow follows the pointer', await c.ev(`!document.querySelector('.is-lit')`));
+  check('reduced motion: no spotlight glow follows the pointer and no card is softened', await c.ev(`!document.querySelector('.is-lit, .is-focusing')`));
   await c.move(8, 8);
   check('fan tiles do not spring', await c.ev(`getComputedStyle(document.querySelector('.fan-tile')).transitionDuration === '0s'`));
   const rl = await c.ev(`document.querySelector('[data-lineup]').getBoundingClientRect().top + scrollY`);
   await c.scroll(rl - 100, 900);
+  check('reduced motion: no gold shimmer on the moving band', await c.ev(`getComputedStyle(document.querySelector('.band-set span')).animationName === 'none'`));
   check('reduced motion: no word-by-word headlines, no gold ring, and the moving bands sit still', await c.ev(`document.querySelectorAll('.split-word').length === 0 && !document.querySelector('.cursor-ring') && [...document.querySelectorAll('.band-track')].every((t) => t.style.transform === '')`));
   check('the bottle parade stands still, shows each bottle once and scrolls sideways by hand', await c.ev(`(() => { const t = document.querySelector('.lineup-track'); const v = document.querySelector('.lineup-viewport'); return getComputedStyle(t).animationName === 'none' && getComputedStyle(v).transitionDuration === '0s' && getComputedStyle(v).overflowX === 'auto' && [...t.children].filter((li) => getComputedStyle(li).display !== 'none').length === 10 && v.scrollWidth > v.clientWidth; })()`));
   await c.visit('/', 900);
@@ -638,7 +643,10 @@ async function shopDesktop() {
   const shopGlow = await c.ev(`(() => { const r = document.querySelectorAll('.shop-card-media')[2].getBoundingClientRect(); return [Math.round(r.left + r.width * 0.5), Math.round(r.top + r.height * 0.4)]; })()`);
   await c.move(...shopGlow); await sleep(700);
   check('on the collection page the cards glow too, each in its own colour (Velvet Rose here)', await c.ev(`(async () => { const { PRODUCTS } = await import('/js/data/catalogue.js'); const cards = [...document.querySelectorAll('.shop-card')]; const card = cards[2]; const glow = getComputedStyle(card.querySelector('.shop-card-media'), '::before'); return cards.every((a, i) => a.hasAttribute('data-spot') && a.style.getPropertyValue('--accent').trim() === PRODUCTS[i].accent) && card.classList.contains('is-lit') && glow.opacity === '1' && document.querySelectorAll('.is-lit').length === 1; })()`));
-  await c.move(8, 8); await sleep(300);
+  await sleep(300);
+  check('on the collection page the same soft focus applies to the other cards', await c.ev(`(() => { const grid = document.querySelector('.shop-grid'); const f = (i) => getComputedStyle(document.querySelectorAll('.shop-card-media')[i]).filter; return grid.classList.contains('is-focusing') && f(2) === 'none' && [0, 1, 3, 4, 9].every((i) => /blur/.test(f(i))); })()`));
+  await c.move(8, 8); await sleep(900);
+  check('...and it ends when the pointer leaves', await c.ev(`!document.querySelector('.is-focusing') && [...document.querySelectorAll('.shop-card-media')].every((e) => getComputedStyle(e).filter === 'none')`));
   await c.visit('/pages/about', 1800);
   check('the About page is an honest placeholder', await c.ev(`/has not been written yet/.test(document.querySelector('.shop-message').innerText) && document.querySelector('h1').textContent === 'About AMORE'`));
   await c.visit('/products/not-a-fragrance', 1800);

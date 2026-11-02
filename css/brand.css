@@ -73,7 +73,11 @@ body.home-page .header:not(.header-scroll-up):not(.search-open) .header-logo .lo
 [data-spot].is-lit .collection-card-image::before, [data-spot].is-lit .collection-card-image::after,
 [data-spot].is-lit .shop-card-media::before, [data-spot].is-lit .shop-card-media::after { opacity: 1; }
 /* and a soft aura of the same colour around the lit card, which shows against the paper */
-.shop-card-media { transition: box-shadow .45s ease; }
+.shop-card-media { transition: box-shadow .45s ease, filter .6s ease, transform .6s ease; }
+.shop-card-body { transition: filter .6s ease, opacity .6s ease; }
+/* focus: while one card is lit the others in its grid soften and dim */
+.shop-grid.is-focusing .shop-card:not(.is-lit) .shop-card-media { filter: blur(2px) brightness(.68) saturate(.75); transform: scale(.985); }
+.shop-grid.is-focusing .shop-card:not(.is-lit) .shop-card-body { filter: blur(1.2px); opacity: .5; }
 [data-spot].is-lit .collection-card-image, [data-spot].is-lit .shop-card-media {
   box-shadow: 0 22px 44px -26px rgba(61, 15, 23, .55), 0 0 44px -6px color-mix(in srgb, var(--accent, #b08a4a) 70%, transparent);
 }
